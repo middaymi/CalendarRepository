@@ -222,6 +222,7 @@ public class CalendarApplication {
             content.add(Box.createHorizontalGlue());
             
             getContentPane().add(content, BorderLayout.SOUTH);
+            getContentPane().add(new CalendarTable(), BorderLayout.CENTER);
             //setLocationRelativeTo(null);
             //******************************************************************
             pack();            

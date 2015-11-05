@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 
-public class CalendarTable {
+public class CalendarTable extends JPanel {
     static JLabel lblMonth, lblYear;
     static JButton btnPrev, btnNext;
     static JTable tblCalendar;
@@ -45,11 +45,7 @@ public class CalendarTable {
                UnsupportedLookAndFeelException e) {}
 
         //Prepare frame
-        frmMain = new JFrame ("Calendar"); //Create frame
-        frmMain.setSize(530, 575); //Set size to 400x400 pixels
-        pane = frmMain.getContentPane(); //Get content pane
-        pane.setLayout(null); //Apply null layout
-        frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
+        setSize(530, 575); //Set size to 400x400 pixels
 
         //Create controls
         lblMonth = new JLabel ("January");
@@ -60,22 +56,20 @@ public class CalendarTable {
         mtblCalendar = new DefaultTableModel(){public boolean isCellEditable(int rowIndex, int mColIndex){return false;}};
         tblCalendar = new JTable(mtblCalendar);
         stblCalendar = new JScrollPane(tblCalendar);
-        pnlCalendar = new JPanel(null);
 
         //Set border
-        pnlCalendar.setBorder(BorderFactory.createTitledBorder("Calendar"));
+        setBorder(BorderFactory.createTitledBorder("Calendar"));
 
         //добавляем панели (салендарь, месяц...) 
-        pane.add(pnlCalendar);
-        pnlCalendar.add(lblMonth);
-        pnlCalendar.add(lblYear);
-        pnlCalendar.add(cmbYear);
-        pnlCalendar.add(btnPrev);
-        pnlCalendar.add(btnNext);
-        pnlCalendar.add(stblCalendar);
+        add(lblMonth);
+        add(lblYear);
+        add(cmbYear);
+        add(btnPrev);
+        add(btnNext);
+        add(stblCalendar);
 
         //установка границ
-        pnlCalendar.setBounds(0, 0, 520, 535);
+        setBounds(0, 0, 520, 535);
         lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100, 25);
         lblYear.setBounds(10, 305, 80, 20);
         cmbYear.setBounds(230, 305, 80, 20);
@@ -85,8 +79,7 @@ public class CalendarTable {
 
 
         //Make frame visible
-        frmMain.setResizable(true);
-        frmMain.setVisible(true);
+        setVisible(true);
 
         //Get real month/year
         GregorianCalendar cal = new GregorianCalendar(); //Create calendar
