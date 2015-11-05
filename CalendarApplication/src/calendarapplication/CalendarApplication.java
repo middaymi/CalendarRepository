@@ -1,6 +1,5 @@
 package calendarapplication;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,16 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import static javax.swing.Box.createHorizontalGlue;
 import static javax.swing.Box.createHorizontalStrut;
-import static javax.swing.Box.createVerticalStrut;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class CalendarApplication {
  
@@ -54,10 +50,10 @@ public class CalendarApplication {
             //***BUTTONS START***
             //button "week"
             JButton buttonWeek = new JButton();
-            buttonWeek.setIcon(new ImageIcon("images\\Week.png"));
+            //buttonWeek.setIcon(new ImageIcon("images\\Week.png"));
             //change when press
-            buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
-            buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
+            //buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
+            //buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
             //unvisible button, visible icon
             buttonWeek.setBorderPainted(false);
             buttonWeek.setFocusPainted(false);
@@ -126,7 +122,7 @@ public class CalendarApplication {
             Close.setFocusPainted(false);
             Close.setContentAreaFilled(false);
             Close.setSize(300, 115);
-            
+//            test1.
             //test buttons for measuring frame
 //            JButton test1 = new JButton();
 //            test1.sesetLocation(30,65);                     
@@ -155,75 +151,45 @@ public class CalendarApplication {
 //            //top.add(createHorizontalStrut(-17)); 
 //            
 //            //bottom panel
-//            Box bottom = Box.createHorizontalBox(); 
-//            bottom.add(createVerticalStrut(FrameHeight(getRezolution())*105/61));
-                               
-//            //Container bottom = new Container();
-//            //BoxLayout bottomBox = new BoxLayout(bottom, BoxLayout.X_AXIS);
-//            //bottom.setLayout(bottomBox);
-//            //bottom.add(Box.createVerticalStrut(FrameHeight(getRezolution())*105/61));
-           
-//            bottom.add(createHorizontalGlue()); 
+//            Container bottom = new Container();
+//            BoxLayout bottomBox = new BoxLayout(bottom, BoxLayout.X_AXIS);
+//            bottom.setLayout(bottomBox);
+//            bottom.add(Box.createVerticalStrut(2060));
+//           
 //            bottom.add(createHorizontalStrut(-17));          
 //            bottom.add(buttonWeek);
 //            bottom.add(createHorizontalStrut(-17));
-//            bottom.add(createHorizontalGlue()); 
 //            
 //            bottom.add(createHorizontalStrut(-17));          
 //            bottom.add(buttonMonth);
 //            bottom.add(createHorizontalStrut(-17));
-//            bottom.add(createHorizontalGlue()); 
 //           
 //            bottom.add(createHorizontalStrut(-17));          
 //            bottom.add(buttonYear);
 //            bottom.add(createHorizontalStrut(-17));
-//            bottom.add(createHorizontalGlue()); 
 //            
 //            bottom.add(createHorizontalStrut(-17));          
 //            bottom.add(buttonSettings);
 //            bottom.add(createHorizontalStrut(-17)); 
-//            bottom.add(createHorizontalGlue()); 
-//            bottom.setSize(200, 200);
             
-//            backgroundPanel.setLayout(null);
-//            buttonWeek.setSize(FrameHeight(getRezolution())/6,FrameHeight(getRezolution())/12);
-//            buttonWeek.setLocation(FrameHeight(getRezolution())/6,FrameHeight(getRezolution())*28/30 -132 );
-//            backgroundPanel.add(buttonWeek);           
+            backgroundPanel.setLayout(null);
+            buttonWeek.setSize(FrameHeight(getRezolution())/6,FrameHeight(getRezolution())/12);
+            buttonWeek.setLocation(FrameHeight(getRezolution())/6,FrameHeight(getRezolution())*28/30 -132 );
+            backgroundPanel.add(buttonWeek);           
             
-//            ImagePanel button1 = null; 
-//            button1 = new ImagePanel();
-//                try { 
-//                    button1.SetBackground(ImageIO.read(new File("images\\Week.png")));
-//                } catch (IOException ex) {
-//                    Logger.getLogger(CalendarApplication.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                buttonWeek.add(button1);      
+            ImagePanel button1 = null; 
+            button1 = new ImagePanel();
+                try { 
+                    button1.SetBackground(ImageIO.read(new File("images\\Week.png")));
+                } catch (IOException ex) {
+                    Logger.getLogger(CalendarApplication.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                buttonWeek.add(button1);      
                         
             //backgroundPanel.add(top);
             //backgroundPanel.add(bottom);
-            //backgroundPanel.add(buttonWeek);
-            //setContentPane(backgroundPanel);
-            
-            //***********SEE IT*************************************************            
-            JPanel content = new JPanel();
-            content.setLayout(new BoxLayout(content, BoxLayout.LINE_AXIS));
-            
-            content.add(Box.createHorizontalGlue());
-            content.add(buttonWeek);
-            //content.add(Box.createHorizontalStrut(-32));
-            content.add(Box.createHorizontalGlue());
-            content.add(buttonMonth);
-            //content.add(Box.createHorizontalStrut(-17));
-            content.add(Box.createHorizontalGlue());
-            content.add(buttonYear);
-            //content.add(Box.createHorizontalStrut(-17));
-            content.add(Box.createHorizontalGlue());
-            content.add(buttonSettings);
-            content.add(Box.createHorizontalGlue());
-            
-            getContentPane().add(content, BorderLayout.SOUTH);
-            //setLocationRelativeTo(null);
-            //******************************************************************
+            backgroundPanel.add(buttonWeek);
+            setContentPane(backgroundPanel);
             pack();            
     	    setVisible(true);          
         }
@@ -245,9 +211,8 @@ public class CalendarApplication {
     }   
     public static void main(String[] args) {
         PaintMainFrame frame = new PaintMainFrame();
-        JFrame.setDefaultLookAndFeelDecorated(true);
         frame.setSize(FrameHeight(getRezolution()),FrameHeight(getRezolution()));
         SetApplicationIcon(frame);
-        //CalendarTable tb = new CalendarTable();
+        CalendarTable tb = new CalendarTable();
     }    
 }
