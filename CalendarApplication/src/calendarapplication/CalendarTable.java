@@ -1,14 +1,17 @@
 package calendarapplication;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,28 +27,44 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class CalendarTable extends JPanel {
-    static JLabel lblMonth, lblYear;
-    static JButton btnPrev, btnNext;
-    static JTable tblCalendar;
+    static private JLabel lblMonth, lblYear;
+    static private JButton btnPrev, btnNext;
+    static private JTable tblCalendar;
     //for choose a year from list
-    static JComboBox cmbYear;
-    static JFrame frmMain;
-    static Container pane;
-    static DefaultTableModel mtblCalendar; //Table model
-    static JScrollPane stblCalendar; //The scrollpane
-    static JPanel pnlCalendar;
-    static int realYear, realMonth, realDay, currentYear, currentMonth;
+    static private JComboBox cmbYear;
+    static private JFrame frmMain;
+    static private Container pane;
+    static private DefaultTableModel mtblCalendar; //Table model
+    static private JScrollPane stblCalendar; //The scrollpane
+    static private JPanel pnlCalendar;
+    static private int realYear, realMonth, realDay, currentYear, currentMonth;
+    
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//    static JPanel calendarPanel = new JPanel();
+//    static JButton squareOfDay = new JButton();
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     CalendarTable () {
+        
         //Look and feel
         try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
         catch (ClassNotFoundException | 
                InstantiationException |
                IllegalAccessException |
-               UnsupportedLookAndFeelException e) {}
+               UnsupportedLookAndFeelException e) {}      
+        
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        //кнопка для в таблице календаря
+//        squareOfDay.setIcon(new ImageIcon("images\\square.png"));
+//        squareOfDay.setBorderPainted(false);
+//        squareOfDay.setFocusPainted(false);
+//        squareOfDay.setContentAreaFilled(false);  
+//        
+//        calendarPanel.setLayout(new GridLayout(2,2,5,5));
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         //Prepare frame
-        setSize(530, 575); //Set size to 400x400 pixels
+        setSize(1000, 1000); //Set size to 400x400 pixels
 
         //Create controls
         lblMonth = new JLabel ("January");
@@ -88,9 +107,10 @@ public class CalendarTable extends JPanel {
         realYear = cal.get(GregorianCalendar.YEAR); //Get year
         currentMonth = realMonth; //Match month and year
         currentYear = realYear;
+        
 
         //Add headers
-        String[] headers = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}; //All headers
+        String[] headers = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}; 
         for (int i=0; i<7; i++){
             mtblCalendar.addColumn(headers[i]);
         }
@@ -142,7 +162,9 @@ public class CalendarTable extends JPanel {
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){
                 mtblCalendar.setValueAt(null, i, j);
+                //calendarPanel.add(squareOfDay);
             }
+           
         }
         
         //Get first day of month and number of days        
@@ -164,8 +186,10 @@ public class CalendarTable extends JPanel {
         for (int i=1; i<=nod; i++){
             int row     =  (i+som-1)/7;
             int column  =  (i+som-1)%7;
+            //calendarPanel.add(squareOfDay);
             mtblCalendar.setValueAt(i, row, column);
         }
+        
         
         //Apply renderers
         tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
