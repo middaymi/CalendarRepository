@@ -170,11 +170,14 @@ public class CalendarApplication {
             buttonSettings.setMargin(new Insets(-3, -3, -3, -3));
             BottomPanel.add(buttonSettings); 
             
-            //CalendarTable tb = new CalendarTable();      
+            CalendarTable tb = new CalendarTable();
+            backgroundPanel.setLayout(new BorderLayout());
+            backgroundPanel.add(tb, BorderLayout.NORTH);
             //backgroundPanel.add(TopPanel);
-            backgroundPanel.add(BottomPanel);
+            backgroundPanel.add(BottomPanel, BorderLayout.CENTER);
+            //backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS));
             //backgroundPanel.add(tb);
-            
+            //backgroundPanel.add(BottomPanel);
             setContentPane(backgroundPanel);            
             pack();            
     	    setVisible(true);          
@@ -200,7 +203,5 @@ public class CalendarApplication {
         JFrame.setDefaultLookAndFeelDecorated(true);
         frame.setSize(FrameHeight(getRezolution()),FrameHeight(getRezolution()));
         SetApplicationIcon(frame);
-        CalendarTable tb = new CalendarTable(); 
-        
     }    
 }
