@@ -2,32 +2,25 @@ package calendarapplication;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
-import static javax.swing.Box.createHorizontalGlue;
-import static javax.swing.Box.createHorizontalStrut;
 import static javax.swing.Box.createVerticalStrut;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class CalendarApplication {
-    
+public class CalendarApplication {    
  
     //for create image on the frame
     public static class ImagePanel extends JPanel {        
@@ -41,19 +34,7 @@ public class CalendarApplication {
             G.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
         }
     }
-     
-      public static class ImageLabel extends JLabel {        
-        Image image;
-        public void SetBackground(Image image) {
-            this.image = image;
-        }
-        @Override
-        public void paintComponent(Graphics G) {
-            super.paintComponent(G);
-            G.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
-        }
-    }
-      
+          
     //create main frame
     public static class PaintMainFrame extends JFrame  {  
         
@@ -70,7 +51,10 @@ public class CalendarApplication {
             //***BUTTONS START***
             //button "week"
             JButton buttonWeek = new JButton();
-            buttonWeek.setIcon(new ImageIcon("images\\Week.png"));
+            buttonWeek.setIcon(new ImageIcon("images\\WEEK_1.png"));
+            buttonWeek.setText("Week"); 
+            buttonWeek.setFont(new Font("Arial", Font.PLAIN, 40));
+            buttonWeek.setHorizontalTextPosition(AbstractButton.CENTER);
             //change when press
             buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
             buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
@@ -78,10 +62,13 @@ public class CalendarApplication {
             buttonWeek.setBorderPainted(false);
             buttonWeek.setFocusPainted(false);
             buttonWeek.setContentAreaFilled(false);
-                        
+                              
             //button "month"
             JButton buttonMonth = new JButton();
-            buttonMonth.setIcon(new ImageIcon("images\\Month.png"));
+            buttonMonth.setIcon(new ImageIcon("images\\MONTH_YEAR_1.png")); 
+            buttonMonth.setText("Month"); 
+            buttonMonth.setFont(new Font("Arial", Font.PLAIN, 40));
+            buttonMonth.setHorizontalTextPosition(AbstractButton.CENTER);
             buttonMonth.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setBorderPainted(false);
@@ -90,7 +77,10 @@ public class CalendarApplication {
             
             //button "year"
             JButton buttonYear = new JButton();
-            buttonYear.setIcon(new ImageIcon("images\\Year.png"));
+            buttonYear.setIcon(new ImageIcon("images\\MONTH_YEAR_1.png"));
+            buttonYear.setText("Year"); 
+            buttonYear.setFont(new Font("Arial", Font.PLAIN, 40));
+            buttonYear.setHorizontalTextPosition(AbstractButton.CENTER);
             buttonYear.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setBorderPainted(false);
@@ -115,6 +105,7 @@ public class CalendarApplication {
             ButtonLeft.setFocusPainted(false);
             ButtonLeft.setContentAreaFilled(false);
             
+            //between arrow keys
             JButton betweenLeftAndRight = new JButton("Month");
             betweenLeftAndRight.setBorderPainted(false);
             betweenLeftAndRight.setFocusPainted(false);
@@ -157,10 +148,11 @@ public class CalendarApplication {
             //HoorizontalStrut on the bottom panel = -34 
             JPanel BottomPanel = new JPanel();
             BottomPanel.setOpaque(false);
-            BoxLayout bottom = new BoxLayout(BottomPanel, BoxLayout.LINE_AXIS); 
+            BoxLayout bottom = new BoxLayout(BottomPanel, BoxLayout.X_AXIS); 
             BottomPanel.setLayout(bottom);            
-            BottomPanel.add(createVerticalStrut(FrameHeight(getRezolution())*105/61));
+            //BottomPanel.add(createVerticalStrut(FrameHeight(getRezolution())*105/61 + 1000));
           
+            //del Border between buttons and icon(image)
             buttonWeek.setMargin(new Insets(-3, -3, -3, -3));
             BottomPanel.add(buttonWeek);                        
             buttonMonth.setMargin(new Insets(-3, -3, -3, -3));
@@ -170,26 +162,28 @@ public class CalendarApplication {
             buttonSettings.setMargin(new Insets(-3, -3, -3, -3));
             BottomPanel.add(buttonSettings); 
             
-            //CalendarTable tb = new CalendarTable();      
-            //backgroundPanel.add(TopPanel);
-            backgroundPanel.add(BottomPanel);
-            //backgroundPanel.add(tb);
+            CalendarTable tb = new CalendarTable();
+            backgroundPanel.setLayout(new BorderLayout());
+            backgroundPanel.add(tb, BorderLayout.NORTH);
             
+            backgroundPanel.add(BottomPanel, BorderLayout.CENTER);
             setContentPane(backgroundPanel);            
             pack();            
     	    setVisible(true);          
         }
     }
-    
+    //get rezolution of the screen
     private static Dimension getRezolution(){        
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         System.out.println(size);
         return (size);        
     }
+    //get needed size of frame
     private static int FrameHeight(Dimension exSize){
         System.out.println(exSize.height*2/3);
         return(exSize.height*2/3);
-    }    
+    }
+    //set icon on the frame and application's icon
     private static void SetApplicationIcon(JFrame frame) {
         Image im = Toolkit.getDefaultToolkit().getImage("images\\48.png");
         frame.setIconImage(im);
@@ -200,7 +194,5 @@ public class CalendarApplication {
         JFrame.setDefaultLookAndFeelDecorated(true);
         frame.setSize(FrameHeight(getRezolution()),FrameHeight(getRezolution()));
         SetApplicationIcon(frame);
-        CalendarTable tb = new CalendarTable(); 
-        
     }    
 }
