@@ -25,7 +25,10 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class CalendarTable extends JPanel {
-    
+//<<<<<<< HEAD
+//    
+//=======
+//>>>>>>> origin/master
     static JLabel lblMonth, lblYear;
     static JButton btnPrev, btnNext;
     static JTable tblCalendar;
@@ -73,7 +76,10 @@ public class CalendarTable extends JPanel {
         tblCalendar = new JTable(mtblCalendar);
         stblCalendar = new JScrollPane(tblCalendar);
 
+
         //add panels (calendar, month, et) 
+
+       //добавляем панели (салендарь, месяц...) 
         add(changeYearPanel);
         add(nextPrevPanel);
         add(stblCalendar);
@@ -96,6 +102,8 @@ public class CalendarTable extends JPanel {
             mtblCalendar.addColumn(headers[i]);
         }
 
+
+        //tblCalendar.getParent().setBackground(tblCalendar.getBackground()); //Set background
         tblCalendar.setOpaque(false);
         //No resize/reorder
         tblCalendar.getTableHeader().setResizingAllowed(false);
