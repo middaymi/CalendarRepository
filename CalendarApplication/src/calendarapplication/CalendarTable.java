@@ -1,5 +1,7 @@
 package calendarapplication;
 
+import static calendarapplication.CalendarApplication.FrameHeight;
+import static calendarapplication.CalendarApplication.getRezolution;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -25,10 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class CalendarTable extends JPanel {
-//<<<<<<< HEAD
-//    
-//=======
-//>>>>>>> origin/master
+
     static JLabel lblMonth, lblYear;
     static JButton btnPrev, btnNext;
     static JTable tblCalendar;
@@ -53,8 +52,10 @@ public class CalendarTable extends JPanel {
         //Prepare frame
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
- 
+        setBorder(BorderFactory.createEmptyBorder(CountBorder(), CountBorder(), 
+                                                  CountBorder(), CountBorder()));
+        System.out.println("count border = " + CountBorder());
+        
         //Create controls
         JPanel changeYearPanel = new JPanel();
         changeYearPanel.setOpaque(false);
@@ -66,8 +67,8 @@ public class CalendarTable extends JPanel {
         JPanel nextPrevPanel = new JPanel();
         nextPrevPanel.setOpaque(false);
         lblMonth = new JLabel ("[   January   ]");
-        btnPrev = new JButton ("Previous month");
-        btnNext = new JButton ("Next month");
+        btnPrev = new JButton ("Prev");
+        btnNext = new JButton ("Next");
         nextPrevPanel.add(btnPrev);
         nextPrevPanel.add(lblMonth);
         nextPrevPanel.add(btnNext);
@@ -227,5 +228,11 @@ public class CalendarTable extends JPanel {
                 refreshCalendar(currentMonth, currentYear);
             }
         }
-    }  
+    }
+    public static int CountBorder() {
+        int count = 0;
+        count = (int)(FrameHeight(getRezolution())*0.025);
+        return count;      
+    }
+    
 }
