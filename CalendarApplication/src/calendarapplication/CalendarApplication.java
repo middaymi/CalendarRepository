@@ -18,6 +18,9 @@ import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
 
+
+
+
 public class CalendarApplication {    
  
     //for create image on the frj
@@ -41,7 +44,7 @@ public class CalendarApplication {
             ImagePanel backgroundPanel = null; 
             try {                
                 backgroundPanel = new ImagePanel();
-                backgroundPanel.SetBackground(ImageIO.read(new File("images\\MainPanel.png")));
+                backgroundPanel.SetBackground(ImageIO.read(new File("images\\M.png")));
                 this.setOpacity(1);
     	    } catch (IOException e) {
     	    } 
@@ -81,7 +84,7 @@ public class CalendarApplication {
             //for bottom panel, not all frame
 	    GridBagConstraints c = new GridBagConstraints();
            
-            //***BUTTONS START***
+            //**************************BUTTONS START***************************
             //button "week"
             JButton buttonWeek = new JButton();
             buttonWeek.setIcon(icon1);
@@ -188,28 +191,19 @@ public class CalendarApplication {
 //            ButtonRight.setContentAreaFilled(false);
             
             //close and turn buttons under each other on the right top
-//            JButton Turn = new JButton();
-//            Turn.setIcon(new ImageIcon("images\\Turn.png"));
-//            Turn.setBorderPainted(false);
-//            Turn.setFocusPainted(false);
-//            Turn.setContentAreaFilled(false);
-//                      
-//            JButton Close = new JButton();
-//            Close.setIcon(new ImageIcon("images\\Close.png"));
-//            Close.setBorderPainted(false);
-//            Close.setFocusPainted(false);
-//            Close.setContentAreaFilled(false);
-//            Close.setSize(300, 115);
-            //***BUTTONS END***             
-            
-            
-            //top panel
-            //JPanel TopPanel = new JPanel();
-            //BorderLayout top = new BorderLayout(); 
-            //TopPanel.setLayout(top);   
-            //TopPanel.add(ButtonLeft);
-            //TopPanel.add(betweenLeftAndRight);         
-            //TopPanel.add(ButtonRight);            
+            JButton Turn = new JButton();
+            Turn.setIcon(new ImageIcon("images\\Turn.png"));
+            Turn.setBorderPainted(false);
+            Turn.setFocusPainted(false);
+            Turn.setContentAreaFilled(false);
+                      
+            JButton Close = new JButton();
+            Close.setIcon(new ImageIcon("images\\Close.png"));
+            Close.setBorderPainted(false);
+            Close.setFocusPainted(false);
+            Close.setContentAreaFilled(false);
+            Close.setSize(300, 115);
+            //**********************BUTTONS END*********************************        
             
             //BottomPanel.add(createVerticalStrut(FrameHeight(getRezolution())*105/61 + 1000));
           
@@ -226,42 +220,112 @@ public class CalendarApplication {
             
             
             CalendarTable tb = new CalendarTable();
-                     
+            
+            JPanel CloseTurn = new JPanel();
+            JPanel TopPanel = new JPanel();
+            JPanel ChangeYearPanel = new JPanel();
+            
+            TopPanel.add(tb.nextPrevPanel);
+            ChangeYearPanel.add(tb.changeYearPanel);
+            
+            CloseTurn.setLayout(new GridBagLayout());
+            GridBagConstraints ct = new GridBagConstraints();
+            
+            TopPanel.setLayout(new GridBagLayout());
+            GridBagConstraints tp = new GridBagConstraints();
+            
+            ChangeYearPanel.setLayout(new GridBagLayout());
+            GridBagConstraints ch = new GridBagConstraints();
+            
+            ct.weightx = 0.5;
+            ct.weighty = 1;
+            ct.fill = GridBagConstraints.BOTH;
+            ct.anchor = GridBagConstraints.FIRST_LINE_END;
+            ct.gridx = 0;
+            ct.gridy = 0;
+            ct.ipady = 1;
+            CloseTurn.add(Turn, ct);
+            ct.weightx = 0.5;
+            ct.weighty = 1;
+            ct.fill = GridBagConstraints.BOTH;
+            ct.anchor = GridBagConstraints.FIRST_LINE_END;
+            ct.gridx = 1;
+            ct.gridy = 0;
+            ct.ipady = 1;
+            CloseTurn.add(Close, ct);
+           
+            backgroundPanel.add(TopPanel, tp);
+            backgroundPanel.add(ChangeYearPanel, ch);
+            
+            
             backgroundPanel.setLayout(new GridBagLayout()); 
             //for all frame
-            GridBagConstraints a = new GridBagConstraints(); 
+            GridBagConstraints a = new GridBagConstraints();
             
-            //CalendarTable
+            //CloseTurn
             a.weightx = 0.5;
             a.weighty = 1;
             a.fill = GridBagConstraints.BOTH;
             a.gridx = 0;
             a.gridy = 0; 
-            a.ipady = (int) (2*FrameHeight(getRezolution())/3);
-            System.out.println("tb = " + a.ipady);            
-            backgroundPanel.add(tb, a);            
+            a.ipady = 1;
+            backgroundPanel.add(CloseTurn, a);
             
-            //BottomPanel
+            //TopPanel
             a.weightx = 0.5;
             a.weighty = 1;
             a.fill = GridBagConstraints.BOTH;
             a.gridx = 0;
-            a.gridy = 1;
+            a.gridy = 1; 
+            a.ipady = 1;
+            //System.out.println("tb = " + a.ipady);            
+            backgroundPanel.add(TopPanel, a);
+            
+            //ChangeYearPanel
+            a.weightx = 0.5;
+            a.weighty = 1;
+            a.fill = GridBagConstraints.BOTH;
+            a.gridx = 0;
+            a.gridy = 2; 
+            a.ipady = 1;
+            //System.out.println("tb = " + a.ipady);            
+            backgroundPanel.add(ChangeYearPanel, a);            
+            
+            //CalendarTable
+//            a.weightx = 0.5;
+//            a.weighty = 1;
+//            a.fill = GridBagConstraints.BOTH;
+//            a.gridx = 0;
+//            a.gridy = 0; 
+//            a.ipady = (int) (2*FrameHeight(getRezolution())/3);
+//            System.out.println("tb = " + a.ipady);            
+//            backgroundPanel.add(tb, a);            
+            
+            //BottomPanel
+            a.weightx = 0.5;
+            a.weighty = 0;
+            a.fill = GridBagConstraints.BOTH;
+            a.anchor = GridBagConstraints.PAGE_END;
+            a.gridx = 0;
+            a.gridy = 4;
+            a.gridheight = 1;
             a.ipady = 1;            
             System.out.println("buttons = " + a.ipady);
             a.anchor = GridBagConstraints.CENTER;
             //top, left, bottom, right
-            a.insets = new Insets ((int) (FrameHeight(getRezolution())/120),
-                                   (int) (37*FrameHeight(getRezolution())/240),
-                                   (int) (FrameHeight(getRezolution())/30), 
-                                   (int) (37*FrameHeight(getRezolution())/240));
-            
-            //a.insets = new Insets (10, 185, 40, 185);
-            BottomPanel.setOpaque(false);          
+//            a.insets = new Insets ((int) (FrameHeight(getRezolution())/120),
+//                                   (int) (37*FrameHeight(getRezolution())/240),
+//                                   (int) (FrameHeight(getRezolution())/30), 
+//                                   (int) (37*FrameHeight(getRezolution())/240));            
+            a.insets = new Insets (10, 185, 40, 185);
             backgroundPanel.add(BottomPanel, a);
             
-            BottomPanel.setVisible(true);
-            
+            CloseTurn.setOpaque(false);
+            TopPanel.setOpaque(false);
+            ChangeYearPanel.setOpaque(false);
+            BottomPanel.setOpaque(false);            
+      
+                 
             setContentPane(backgroundPanel);
             pack();            
     	    setVisible(true);

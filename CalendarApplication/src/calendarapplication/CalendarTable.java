@@ -37,9 +37,12 @@ public class CalendarTable extends JPanel {
     static Container pane;
     static DefaultTableModel mtblCalendar; //Table model
     static JScrollPane stblCalendar; //The scrollpane
-    static JPanel pnlCalendar;
     static int realYear, realMonth, realDay, currentYear, currentMonth;
+    JPanel changeYearPanel;
+    JPanel nextPrevPanel;
+    static JPanel pnlCalendar;
     
+  
     CalendarTable () {
         
         //Look and feel
@@ -57,14 +60,14 @@ public class CalendarTable extends JPanel {
         System.out.println("count border = " + CountBorder());
         
         //Create controls
-        JPanel changeYearPanel = new JPanel();
+        changeYearPanel = new JPanel();
         changeYearPanel.setOpaque(false);
         lblYear = new JLabel ("Change year:");
         cmbYear = new JComboBox();
         changeYearPanel.add(lblYear);
         changeYearPanel.add(cmbYear);
         
-        JPanel nextPrevPanel = new JPanel();
+        nextPrevPanel = new JPanel();
         nextPrevPanel.setOpaque(false);
         lblMonth = new JLabel ("[   January   ]");
         btnPrev = new JButton ("Prev");
@@ -80,13 +83,13 @@ public class CalendarTable extends JPanel {
 
         //add panels (calendar, month, et) 
 
-       //добавляем панели (салендарь, месяц...) 
+       //добавляем панели (календарь, месяц...) 
         add(changeYearPanel);
         add(nextPrevPanel);
         add(stblCalendar);
 
         //Make frame visible
-        setVisible(true);
+        //setVisible(true);
 
         //Get real month/year
         GregorianCalendar cal = new GregorianCalendar(); //Create calendar
@@ -107,7 +110,7 @@ public class CalendarTable extends JPanel {
         //tblCalendar.getParent().setBackground(tblCalendar.getBackground()); //Set background
         tblCalendar.setOpaque(false);
         //No resize/reorder
-        tblCalendar.getTableHeader().setResizingAllowed(false);
+        tblCalendar.getTableHeader().setResizingAllowed(true);
         tblCalendar.getTableHeader().setReorderingAllowed(false);
 
         //Single cell selection
@@ -145,7 +148,6 @@ public class CalendarTable extends JPanel {
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){
                 mtblCalendar.setValueAt(null, i, j);
-                //calendarPanel.add(squareOfDay);
             }  
         }
         
@@ -168,7 +170,6 @@ public class CalendarTable extends JPanel {
         for (int i=1; i<=nod; i++){
             int row     =  (i+som-1)/7;
             int column  =  (i+som-1)%7;
-            //calendarPanel.add(squareOfDay);
             mtblCalendar.setValueAt(i, row, column);
         }
 
@@ -229,6 +230,19 @@ public class CalendarTable extends JPanel {
             }
         }
     }
+    
+    JPanel getYearPanel() {
+        return changeYearPanel;
+    }
+    
+    JPanel nextPrevPanel() {
+        return nextPrevPanel;
+    }
+    
+    JPanel pnlCalendar() {
+        return pnlCalendar;
+    }  
+    
     public static int CountBorder() {
         int count = 0;
         count = (int)(FrameHeight(getRezolution())*0.025);
