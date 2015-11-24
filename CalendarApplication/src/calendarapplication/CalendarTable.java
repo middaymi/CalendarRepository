@@ -1,17 +1,27 @@
 package calendarapplication;
 
-import static calendarapplication.CalendarApplication.FrameHeight;
+import static calendarapplication.CalendarApplication.frameHeight;
 import static calendarapplication.CalendarApplication.getRezolution;
+import static calendarapplication.CalendarApplication.setSizeButtonsNextPrevPanel;
+import static calendarapplication.CalendarApplication.setSizeChangeYearPanel;
+import static calendarapplication.CalendarApplication.setSizeNextPrevPanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -41,9 +51,24 @@ public class CalendarTable extends JPanel {
     JPanel changeYearPanel;
     JPanel nextPrevPanel;
     static JPanel pnlCalendar;
-    
+    JButton ButtonLeft;
+    JButton betweenLeftAndRight;
+    JButton ButtonRight;
+    ImageIcon iconBtnPrev;
+    ImageIcon iconBtnNext;           
+    Image imgBtnPrev;
+    Image imgBtnNext;
+       
   
     CalendarTable () {
+        iconBtnPrev = new ImageIcon("images\\Left.png");
+        iconBtnNext = new ImageIcon("images\\Right.png");
+                                 
+        imgBtnPrev = iconBtnPrev.getImage();
+        imgBtnNext = iconBtnNext.getImage();
+                     
+        iconBtnPrev = new ImageIcon(imgBtnPrev);
+        iconBtnNext = new ImageIcon(imgBtnNext);          
         
         //Look and feel
         try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -57,24 +82,87 @@ public class CalendarTable extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(CountBorder(), CountBorder(), 
                                                   CountBorder(), CountBorder()));
-        System.out.println("count border = " + CountBorder());
         
         //Create controls
         changeYearPanel = new JPanel();
         changeYearPanel.setOpaque(false);
+        changeYearPanel.setLayout(new GridBagLayout());
+        GridBagConstraints cyp = new GridBagConstraints();
+        setSizeChangeYearPanel(changeYearPanel);
         lblYear = new JLabel ("Change year:");
         cmbYear = new JComboBox();
-        changeYearPanel.add(lblYear);
-        changeYearPanel.add(cmbYear);
+        cyp.weightx = 0.25;
+        cyp.weighty = 0.25;
+        cyp.fill = GridBagConstraints.BOTH;
+        cyp.gridx = 0;
+        cyp.gridy = 0;
+        lblYear.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JLabel label = (JLabel) e.getComponent();
+                Dimension size = changeYearPanel.getSize();
+                label.setSize(size);
+                };});
+        changeYearPanel.add(lblYear, cyp);
+        cyp.weightx = 0.25;
+        cyp.weighty = 0.25;
+        cyp.fill = GridBagConstraints.BOTH;
+        cyp.gridx = 1;
+        cyp.gridy = 0;
+        changeYearPanel.add(cmbYear, cyp);
+       
+        //changeYearPanel.add(lblYear);
+        //changeYearPanel.add(cmbYear);
         
+        //**********************START nextPrevPanel*****************************
         nextPrevPanel = new JPanel();
         nextPrevPanel.setOpaque(false);
-        lblMonth = new JLabel ("[   January   ]");
-        btnPrev = new JButton ("Prev");
-        btnNext = new JButton ("Next");
-        nextPrevPanel.add(btnPrev);
-        nextPrevPanel.add(lblMonth);
-        nextPrevPanel.add(btnNext);
+        nextPrevPanel.setBackground(Color.ORANGE);
+        setSizeNextPrevPanel(nextPrevPanel);
+        nextPrevPanel.setLayout(new GridBagLayout());
+        GridBagConstraints btn = new GridBagConstraints();         
+        btnPrev = new JButton();
+        btnPrev.setIcon(iconBtnPrev);
+        setSizeButtonsNextPrevPanel(btnPrev);
+        btnPrev.setPressedIcon(new ImageIcon("images\\LeftPr.png"));
+        btnPrev.setRolloverIcon(new ImageIcon("images\\LeftPr.png"));
+        btnPrev.setBorderPainted(false);
+        btnPrev.setFocusPainted(false);
+        btnPrev.setContentAreaFilled(false);
+        btn.weightx = 0.25;
+        btn.weighty = 0.25;
+        btn.fill = GridBagConstraints.BOTH;
+        btn.gridx = 0;
+        btn.gridy = 0;
+        nextPrevPanel.add(btnPrev, btn);
+        btnPrev.addActionListener(new btnPrev_Action());
+        
+        lblMonth = new JLabel("MONTH");
+        lblMonth.setHorizontalAlignment(JLabel.CENTER);
+        lblMonth.setSize(100,100);
+        btn.fill = GridBagConstraints.BOTH;
+        btn.weightx = 0.25;
+        btn.weighty = 0.25;
+        btn.gridx = 1;
+        btn.gridy = 0;
+        nextPrevPanel.add(lblMonth, btn);     
+        
+        btnNext = new JButton();
+        btnNext.setIcon(iconBtnNext);
+        setSizeButtonsNextPrevPanel(btnNext);
+        btnNext.setPressedIcon(new ImageIcon("images\\RightPr.png"));
+        btnNext.setRolloverIcon(new ImageIcon("images\\RightPr.png"));
+        btnNext.setBorderPainted(false);
+        btnNext.setFocusPainted(false);
+        btnNext.setContentAreaFilled(false);
+        btn.fill = GridBagConstraints.BOTH;
+        btn.weightx = 0.25;
+        btn.weighty = 0.25;
+        btn.gridx = 2;
+        btn.gridy = 0;
+        nextPrevPanel.add(btnNext, btn);
+        btnNext.addActionListener(new btnNext_Action());
+        //*************************END nextPrexPanel****************************
         
         mtblCalendar = new DefaultTableModel(){public boolean isCellEditable(int rowIndex, int mColIndex){return false;}};
         tblCalendar = new JTable(mtblCalendar);
@@ -83,10 +171,10 @@ public class CalendarTable extends JPanel {
 
         //add panels (calendar, month, et) 
 
-       //добавляем панели (календарь, месяц...) 
-        add(changeYearPanel);
-        add(nextPrevPanel);
-        add(stblCalendar);
+        //добавляем панели (календарь, месяц...) 
+        //add(changeYearPanel);
+        //add(nextPrevPanel);
+        //add(stblCalendar);
 
         //Make frame visible
         //setVisible(true);
@@ -131,8 +219,6 @@ public class CalendarTable extends JPanel {
         refreshCalendar (realMonth, realYear); //Refresh calendar
 
         //Register action listeners
-        btnPrev.addActionListener(new btnPrev_Action());
-        btnNext.addActionListener(new btnNext_Action());
         cmbYear.addActionListener(new cmbYear_Action());
     }
     
@@ -141,7 +227,7 @@ public class CalendarTable extends JPanel {
         String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         int nod, som; //Number Of Days, Start Of Month
 
-        lblMonth.setText("[   " + months[month] + "   ]"); //Refresh the month label (at the top)
+        lblMonth.setText("[   " + months[month] + "   ]"); //Refresh the month label (at the top)  
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
         //Clear table
@@ -245,7 +331,7 @@ public class CalendarTable extends JPanel {
     
     public static int CountBorder() {
         int count = 0;
-        count = (int)(FrameHeight(getRezolution())*0.025);
+        count = (int)(frameHeight(getRezolution())*0.025);
         return count;      
     }
     

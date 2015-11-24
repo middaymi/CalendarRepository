@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 
 public class CalendarApplication {    
  
-    //for create image on the frj
+    //for create image on the frame
     public static class ImagePanel extends JPanel {        
         Image image;
         public void SetBackground(Image image) {
@@ -37,7 +37,26 @@ public class CalendarApplication {
     }
           
     //create main frame
-    public static class PaintMainFrame extends JFrame  {  
+    public static class PaintMainFrame extends JFrame  {
+            JPanel turnClosePanel;
+            JPanel bottomPanel = new JPanel();
+            ImageIcon iconWeek = new ImageIcon("images\\WEEK_1.png");;
+            ImageIcon iconMonthYear = new ImageIcon("images\\MONTH_YEAR_1.png");
+            ImageIcon iconSettings = new ImageIcon("images\\SET.png");
+            ImageIcon iconTurn = new ImageIcon("images\\Turn.png");
+            ImageIcon iconClose = new ImageIcon("images\\Close.png");
+            Image imgWeek;
+            Image imgMonthYear;
+            //Image img;
+            Image imgSettings;
+            Image imgTurn;
+            Image imgClose;
+            JButton buttonWeek = new JButton();
+            JButton buttonMonth = new JButton();
+            JButton buttonYear = new JButton();;
+            JButton buttonSettings = new JButton();;
+            JButton turn = new JButton();;
+            JButton close = new JButton();
         
     	PaintMainFrame() {
             super("Calendar");           
@@ -49,326 +68,198 @@ public class CalendarApplication {
     	    } catch (IOException e) {
     	    } 
             setDefaultCloseOperation(EXIT_ON_CLOSE); 
-            
-            ImageIcon icon1 = new ImageIcon("images\\WEEK_1.png");
-            ImageIcon icon2 = new ImageIcon("images\\MONTH_YEAR_1.png");
-            ImageIcon icon3 = new ImageIcon("images\\MONTH_YEAR_1.png");
-            ImageIcon icon4 = new ImageIcon("images\\SET.png");
-            
-//            ImageIcon icon1_2 = new ImageIcon("images\\WeekPr.png");
-//            ImageIcon icon2_2 = new ImageIcon("images\\MonthAndYearPr.png");
-//            ImageIcon icon4_2 = new ImageIcon("images\\SetPr.png");          
-            
-            Image img1 = icon1.getImage();
-            Image img2 = icon2.getImage();
-            Image img3 = icon3.getImage() ;
-            Image img4 = icon4.getImage();
-            
-//            Image img1_2 = icon1.getImage();
-//            Image img2_2 = icon1.getImage();
-//            Image img4_2 = icon1.getImage();
-            
-            icon1 = new ImageIcon(img1);
-            icon2 = new ImageIcon(img2);
-            icon3 = new ImageIcon(img3);
-            icon4 = new ImageIcon(img4);
-            
-//            icon1_2 = new ImageIcon(img1_2);
-//            icon2_2 = new ImageIcon(img2_2);
-//            icon4_2 = new ImageIcon(img4_2);
-            
-            //create bottom panel
-            //HoorizontalStrut on the bottom panel = -34 
-            JPanel BottomPanel = new JPanel();
-            BottomPanel.setLayout(new GridBagLayout());
-            //for bottom panel, not all frame
-	    GridBagConstraints c = new GridBagConstraints();
+                                
+            imgWeek = iconWeek.getImage();
+            imgMonthYear = iconMonthYear.getImage();
+            imgSettings = iconSettings.getImage();
+            imgTurn = iconTurn.getImage();
+            imgClose = iconClose.getImage();
            
-            //**************************BUTTONS START***************************
-            //button "week"
-            JButton buttonWeek = new JButton();
-            buttonWeek.setIcon(icon1);
-//            buttonWeek.setText("Week"); 
-//            buttonWeek.setFont(new Font("Arial", Font.PLAIN, 40));
-//            buttonWeek.setHorizontalTextPosition(AbstractButton.CENTER);
-            //change when press
+            iconWeek = new ImageIcon(imgWeek);
+            iconMonthYear = new ImageIcon(imgMonthYear);
+            iconSettings = new ImageIcon(imgSettings);
+            iconTurn = new ImageIcon(imgTurn);
+            iconClose = new ImageIcon(imgClose);       
+                                                                                          
+            backgroundPanel.setLayout(null);             
+            
+            
+            //*********************START TurnClosePanel*************************
+            //settings panel
+            turnClosePanel = new JPanel();
+            turnClosePanel.setLayout(new GridBagLayout());
+            turnClosePanel.setOpaque(true);
+            setSizeCloseTurnPanel(turnClosePanel);          
+            GridBagConstraints tc = new GridBagConstraints();
+            //button turn
+            turn = new JButton();
+            turn.setIcon(iconTurn);
+            turn.setBorderPainted(false);
+            turn.setFocusPainted(false);
+            turn.setContentAreaFilled(false);
+            tc.weightx = 0.25;
+            tc.weighty = 0.25;
+            tc.fill = GridBagConstraints.BOTH;
+            tc.gridx = 0;
+            tc.gridy = 0;
+            turn.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgTurn.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+            };});
+            turnClosePanel.add(turn, tc);
+            
+            //button close
+            close = new JButton();
+            close.setIcon(iconClose);
+            close.setBorderPainted(false);
+            close.setFocusPainted(false);
+            close.setContentAreaFilled(false);
+            tc.weightx = 0.25;
+            tc.weighty = 0.25;
+            tc.fill = GridBagConstraints.BOTH;
+            tc.gridx = 1;
+            tc.gridy = 0;
+            close.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgClose.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+            };});
+            turnClosePanel.add(close, tc);
+            backgroundPanel.add(turnClosePanel); 
+            //************************END TurnClosePanel************************          
+            
+          
+            //******************START nextPrevPanel*****************************
+            CalendarTable tb = new CalendarTable();
+            backgroundPanel.add(tb.nextPrevPanel);  
+            //******************END nextPrevPanel*******************************
+          
+
+            //******************START ChangeYearPanel*************************** 
+            backgroundPanel.add(tb.changeYearPanel);
+            //******************END ChangeYearPanel*****************************           
+            
+            
+            //************************START BottomPanel*************************
+            //settings bottom panel
+            bottomPanel.setLayout(new GridBagLayout());
+            setSizeBottomPanel(bottomPanel);
+            bottomPanel.setOpaque(false);
+            GridBagConstraints bp = new GridBagConstraints(); 
+            
+            buttonWeek = new JButton();
+            buttonWeek.setIcon(iconWeek);
             buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
             buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
-            //unvisible button, visible icon
             buttonWeek.setBorderPainted(false);
             buttonWeek.setFocusPainted(false);
             buttonWeek.setContentAreaFilled(false);
-            c.weightx = 0.5;
-            c.weighty = 1.0;
-            c.fill = GridBagConstraints.BOTH;
-            //ipadx = 50
-            c.ipadx = (int)(FrameHeight(getRezolution())/24);
-            //ipady = 3
-            c.ipady = (int)(FrameHeight(getRezolution())*0.0025);
-            c.gridx = 0;
-            c.gridy = 1;
-            BottomPanel.add(buttonWeek, c);
-                                          
-            //button "month"
-            JButton buttonMonth = new JButton();
-            buttonMonth.setIcon(icon2); 
-//            buttonMonth.setText("Month"); 
-//            buttonMonth.setFont(new Font("Arial", Font.PLAIN, 40));
-//            buttonMonth.setHorizontalTextPosition(AbstractButton.CENTER);
+            bp.weightx = 0.25;
+            bp.weighty = 0.25;
+            bp.fill = GridBagConstraints.BOTH;
+            bp.gridx = 0;
+            bp.gridy = 0;
+            buttonWeek.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgWeek.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+            };});
+            bottomPanel.add(buttonWeek, bp);
+        
+            buttonMonth = new JButton();
+            buttonMonth.setIcon(iconMonthYear);
             buttonMonth.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setBorderPainted(false);
             buttonMonth.setFocusPainted(false);
             buttonMonth.setContentAreaFilled(false);
-            c.weightx = 0.5;
-            c.weighty = 1.0;
-            c.fill = GridBagConstraints.BOTH;
-            c.ipadx = (int)(FrameHeight(getRezolution())/24);
-            c.ipady = (int)(FrameHeight(getRezolution())*0.0025);
-            c.gridx = 1;
-            c.gridy = 1;
-            BottomPanel.add(buttonMonth, c);
-            
-            //button "year"
-            JButton buttonYear = new JButton();
-            buttonYear.setIcon(icon2);
-//            buttonYear.setText("Year"); 
-//            buttonYear.setFont(new Font("Arial", Font.PLAIN, 40));
-//            buttonYear.setHorizontalTextPosition(AbstractButton.CENTER);
+            bp.fill = GridBagConstraints.BOTH;
+            bp.weightx = 0.25;
+            bp.weighty = 0.25;
+            bp.gridx = 1;
+            bp.gridy = 0;
+            buttonMonth.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgMonthYear.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+                };});
+            bottomPanel.add(buttonMonth, bp);
+        
+            buttonYear = new JButton();
+            buttonYear.setIcon(iconMonthYear);
             buttonYear.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setBorderPainted(false);
             buttonYear.setFocusPainted(false);
             buttonYear.setContentAreaFilled(false);
-            c.weightx = 0.5;
-            c.weighty = 1.0;
-            c.fill = GridBagConstraints.BOTH;
-            c.ipadx = (int)(FrameHeight(getRezolution())/24);
-            c.ipady = (int)(FrameHeight(getRezolution())*0.0025);
-            c.gridx = 2;
-            c.gridy = 1;
-            BottomPanel.add(buttonYear, c);
-           
-            //button "set"
-            JButton buttonSettings = new JButton();
-            buttonSettings.setIcon(icon4);
+            bp.fill = GridBagConstraints.BOTH;
+            bp.weightx = 0.25;
+            bp.weighty = 0.25;
+            bp.gridx = 2;
+            bp.gridy = 0;
+            buttonYear.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgMonthYear.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+                };}); 
+            bottomPanel.add(buttonYear, bp);
+        
+            buttonSettings = new JButton();
+            buttonSettings.setIcon(iconSettings);
             buttonSettings.setPressedIcon(new ImageIcon("images\\SetPr.png"));
             buttonSettings.setRolloverIcon(new ImageIcon("images\\SetPr.png"));
             buttonSettings.setBorderPainted(false);
             buttonSettings.setFocusPainted(false);
             buttonSettings.setContentAreaFilled(false);
-            c.weightx = 0.5;
-            c.weighty = 1.0;
-            c.fill = GridBagConstraints.BOTH;
-            c.ipadx = (int)(FrameHeight(getRezolution())/24);
-            c.ipady = (int)(FrameHeight(getRezolution())*0.0025);
-            c.gridx = 3;
-            c.gridy = 1;
-            BottomPanel.add(buttonSettings, c);
-             
-            //arrow-button left
-//            JButton ButtonLeft = new JButton();
-//            ButtonLeft.setIcon(new ImageIcon("images\\Left.png"));
-//            ButtonLeft.setPressedIcon(new ImageIcon("images\\LeftPr.png"));
-//            ButtonLeft.setRolloverIcon(new ImageIcon("images\\LeftPr.png"));
-//            ButtonLeft.setBorderPainted(false);
-//            ButtonLeft.setFocusPainted(false);
-//            ButtonLeft.setContentAreaFilled(false);
-            
-            //between arrow keys
-//            JButton betweenLeftAndRight = new JButton("Month");
-//            betweenLeftAndRight.setBorderPainted(false);
-//            betweenLeftAndRight.setFocusPainted(false);
-//            betweenLeftAndRight.setContentAreaFilled(false);
-            
-            //arrow-button right
-//            JButton ButtonRight = new JButton();
-//            ButtonRight.setIcon(new ImageIcon("images\\Right.png"));
-//            ButtonRight.setPressedIcon(new ImageIcon("images\\RightPr.png"));
-//            ButtonRight.setRolloverIcon(new ImageIcon("images\\RightPr.png"));
-//            ButtonRight.setBorderPainted(false);
-//            ButtonRight.setFocusPainted(false);
-//            ButtonRight.setContentAreaFilled(false);
-            
-            //close and turn buttons under each other on the right top
-            JButton Turn = new JButton();
-            Turn.setIcon(new ImageIcon("images\\Turn.png"));
-            Turn.setBorderPainted(false);
-            Turn.setFocusPainted(false);
-            Turn.setContentAreaFilled(false);
-                      
-            JButton Close = new JButton();
-            Close.setIcon(new ImageIcon("images\\Close.png"));
-            Close.setBorderPainted(false);
-            Close.setFocusPainted(false);
-            Close.setContentAreaFilled(false);
-            Close.setSize(300, 115);
-            //**********************BUTTONS END*********************************        
-            
-            //BottomPanel.add(createVerticalStrut(FrameHeight(getRezolution())*105/61 + 1000));
+            bp.fill = GridBagConstraints.BOTH;
+            bp.weightx = 0.25;
+            bp.weighty = 0.25;
+            bp.gridx = 3;
+            bp.gridy = 0;
+            buttonSettings.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton button = (JButton) e.getComponent();
+                Dimension size = button.getSize();
+                Image scaled = imgSettings.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+                };});
+            bottomPanel.add(buttonSettings, bp);          
+            backgroundPanel.add(bottomPanel);
+            //******************END BottomPanel*********************************
           
-            //del gap between buttons
-            //del Border between buttons and icon(image)
-            //buttonWeek.setMargin(new Insets(-3, -3, -3, -3));
-            //bottomPanel.add(buttonWeek);                        
-            //buttonMonth.setMargin(new Insets(-3, -3, -3, -3));
-            //BottomPanel.add(buttonMonth);                       
-            //buttonYear.setMargin(new Insets(-3, -3, -3, -3));
-            //BottomPanel.add(buttonYear);            
-            //buttonSettings.setMargin(new Insets(-3, -3, -3, -3));
-            //BottomPanel.add(buttonSettings); 
             
-            
-            CalendarTable tb = new CalendarTable();
-            
-            JPanel CloseTurn = new JPanel();
-            JPanel TopPanel = new JPanel();
-            JPanel ChangeYearPanel = new JPanel();
-            
-            TopPanel.add(tb.nextPrevPanel);
-            ChangeYearPanel.add(tb.changeYearPanel);
-            
-            CloseTurn.setLayout(new GridBagLayout());
-            GridBagConstraints ct = new GridBagConstraints();
-            
-            TopPanel.setLayout(new GridBagLayout());
-            GridBagConstraints tp = new GridBagConstraints();
-            
-            ChangeYearPanel.setLayout(new GridBagLayout());
-            GridBagConstraints ch = new GridBagConstraints();
-            
-            ct.weightx = 0.5;
-            ct.weighty = 1;
-            ct.fill = GridBagConstraints.BOTH;
-            ct.anchor = GridBagConstraints.FIRST_LINE_END;
-            ct.gridx = 0;
-            ct.gridy = 0;
-            ct.ipady = 1;
-            CloseTurn.add(Turn, ct);
-            ct.weightx = 0.5;
-            ct.weighty = 1;
-            ct.fill = GridBagConstraints.BOTH;
-            ct.anchor = GridBagConstraints.FIRST_LINE_END;
-            ct.gridx = 1;
-            ct.gridy = 0;
-            ct.ipady = 1;
-            CloseTurn.add(Close, ct);
-           
-            backgroundPanel.add(TopPanel, tp);
-            backgroundPanel.add(ChangeYearPanel, ch);
-            
-            
-            backgroundPanel.setLayout(new GridBagLayout()); 
-            //for all frame
-            GridBagConstraints a = new GridBagConstraints();
-            
-            //CloseTurn
-            a.weightx = 0.5;
-            a.weighty = 1;
-            a.fill = GridBagConstraints.BOTH;
-            a.gridx = 0;
-            a.gridy = 0; 
-            a.ipady = 1;
-            backgroundPanel.add(CloseTurn, a);
-            
-            //TopPanel
-            a.weightx = 0.5;
-            a.weighty = 1;
-            a.fill = GridBagConstraints.BOTH;
-            a.gridx = 0;
-            a.gridy = 1; 
-            a.ipady = 1;
-            //System.out.println("tb = " + a.ipady);            
-            backgroundPanel.add(TopPanel, a);
-            
-            //ChangeYearPanel
-            a.weightx = 0.5;
-            a.weighty = 1;
-            a.fill = GridBagConstraints.BOTH;
-            a.gridx = 0;
-            a.gridy = 2; 
-            a.ipady = 1;
-            //System.out.println("tb = " + a.ipady);            
-            backgroundPanel.add(ChangeYearPanel, a);            
-            
-            //CalendarTable
-//            a.weightx = 0.5;
-//            a.weighty = 1;
-//            a.fill = GridBagConstraints.BOTH;
-//            a.gridx = 0;
-//            a.gridy = 0; 
-//            a.ipady = (int) (2*FrameHeight(getRezolution())/3);
-//            System.out.println("tb = " + a.ipady);            
-//            backgroundPanel.add(tb, a);            
-            
-            //BottomPanel
-            a.weightx = 0.5;
-            a.weighty = 0;
-            a.fill = GridBagConstraints.BOTH;
-            a.anchor = GridBagConstraints.PAGE_END;
-            a.gridx = 0;
-            a.gridy = 4;
-            a.gridheight = 1;
-            a.ipady = 1;            
-            System.out.println("buttons = " + a.ipady);
-            a.anchor = GridBagConstraints.CENTER;
-            //top, left, bottom, right
-//            a.insets = new Insets ((int) (FrameHeight(getRezolution())/120),
-//                                   (int) (37*FrameHeight(getRezolution())/240),
-//                                   (int) (FrameHeight(getRezolution())/30), 
-//                                   (int) (37*FrameHeight(getRezolution())/240));            
-            a.insets = new Insets (10, 185, 40, 185);
-            backgroundPanel.add(BottomPanel, a);
-            
-            CloseTurn.setOpaque(false);
-            TopPanel.setOpaque(false);
-            ChangeYearPanel.setOpaque(false);
-            BottomPanel.setOpaque(false);            
-      
-                 
             setContentPane(backgroundPanel);
             pack();            
-    	    setVisible(true);
-            
-        buttonWeek.addComponentListener(new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            JButton btn1 = (JButton) e.getComponent();
-            Dimension size1 = btn1.getSize();
-            //System.out.println("size_1 =" + size1);
-            Image scaled = img1.getScaledInstance(size1.width, size1.height, java.awt.Image.SCALE_SMOOTH);
-            //Image scaled_2 = img1.getScaledInstance(size1.width, size1.height, java.awt.Image.SCALE_SMOOTH);
-            btn1.setIcon(new ImageIcon(scaled));
-            };});
-        buttonMonth.addComponentListener(new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            JButton btn2 = (JButton) e.getComponent();
-            Dimension size2 = btn2.getSize();
-            System.out.println("size_2 =" + size2);
-            Image scaled = img2.getScaledInstance(size2.width, size2.height, java.awt.Image.SCALE_SMOOTH);
-            btn2.setIcon(new ImageIcon(scaled));
-            };});     
-        buttonYear.addComponentListener(new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            JButton btn3 = (JButton) e.getComponent();
-            Dimension size3 = btn3.getSize();
-            System.out.println("size_2 =" + size3);
-            Image scaled = img3.getScaledInstance(size3.width, size3.height, java.awt.Image.SCALE_SMOOTH);
-            btn3.setIcon(new ImageIcon(scaled));
-            };}); 
-        buttonSettings.addComponentListener(new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            JButton btn4 = (JButton) e.getComponent();
-            Dimension size4 = btn4.getSize();
-            //System.out.println("size_2 =" + size4);
-            Image scaled = img4.getScaledInstance(size4.width, size4.height, java.awt.Image.SCALE_SMOOTH);
-            btn4.setIcon(new ImageIcon(scaled));
-            };});
+    	    setVisible(true);        
         }
     }
+//    //cmbYear.addActionListener(new cmbYear_Action());
+//    public static class componentResized implements addComponentListener{
+//        public void componentResized(ComponentEvent e) {
+//                JButton button = (JButton) e.getComponent();
+//                Dimension size = button.getSize();
+//                Image scaled = img.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+//                button.setIcon(new ImageIcon(scaled));
+//            };}
+    
+    
     //get rezolution of the screen
     public static Dimension getRezolution(){        
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
@@ -376,20 +267,82 @@ public class CalendarApplication {
         return (size);        
     }
     //get needed size of frame
-    public static int FrameHeight(Dimension exSize){
+    public static int frameHeight(Dimension exSize){
         System.out.println(exSize.height*2/3);
         return(exSize.height*2/3);
     }
     //set icon on the frame and application's icon
-    private static void SetApplicationIcon(JFrame frame) {
+    private static void setApplicationIcon(JFrame frame) {
         Image im = Toolkit.getDefaultToolkit().getImage("images\\48.png");
         frame.setIconImage(im);
         frame.show();
-    }   
+    } 
+    public static JPanel setSizeBottomPanel(JPanel pane) {  
+        Dimension size = new Dimension();
+        size.height = (int)(frameHeight(getRezolution())/12); 
+        size.width  = (int)(2*frameHeight(getRezolution())/3);
+        
+        Point location = new Point();
+        location.x = (int)(0.15*frameHeight(getRezolution()));
+        location.y = (int)(199*frameHeight(getRezolution())/240 - 5);        
+        
+        pane.setSize(size);
+        pane.setLocation(location);
+        return (pane); 
+    }    
+    public static JPanel setSizeChangeYearPanel(JPanel pane) {
+        Dimension size = new Dimension();
+        size.width  = (int)(5*frameHeight(getRezolution())/24);
+        size.height = (int)(0.05*frameHeight(getRezolution())); 
+               
+        Point location = new Point();
+        location.x = (int)(0.025*frameHeight(getRezolution()));
+        location.y = (int)(0.2125*frameHeight(getRezolution()));        
+        
+        pane.setSize(size);
+        pane.setLocation(location);    
+        return (pane); 
+    } 
+    public static JPanel setSizeNextPrevPanel(JPanel pane) {
+        Dimension size = new Dimension();
+        size.width  = (int)(0.925*frameHeight(getRezolution()));
+        size.height = (int)(0.075*frameHeight(getRezolution())); 
+               
+        Point location = new Point();
+        location.x = (int)(0.026*frameHeight(getRezolution()));
+        location.y = (int)(2*frameHeight(getRezolution())/15);        
+        
+        pane.setSize(size);
+        pane.setLocation(location);   
+        return (pane); 
+    }
+    public static JButton setSizeButtonsNextPrevPanel(JButton button) {
+        Dimension size = new Dimension();
+        size.width  = (int)(0.925*frameHeight(getRezolution())/3);
+        size.height = (int)(0.075*frameHeight(getRezolution()));       
+        
+        button.setSize(size); 
+        return (button); 
+    } 
+    public static JPanel setSizeCloseTurnPanel(JPanel pane) {
+        Dimension size = new Dimension();
+        size.width  = (int)(11*frameHeight(getRezolution())/120);
+        size.height = (int)(frameHeight(getRezolution())/24); 
+               
+        Point location = new Point();
+        location.x = (int)(13*frameHeight(getRezolution())/15);
+        location.y = (int)(frameHeight(getRezolution())/40);        
+        
+        pane.setSize(size);
+        pane.setLocation(location);   
+        return (pane); 
+    }
+    
+    
     public static void main(String[] args) {
         PaintMainFrame frame = new PaintMainFrame();
         JFrame.setDefaultLookAndFeelDecorated(true);
-        frame.setSize(FrameHeight(getRezolution()),FrameHeight(getRezolution()));
-        SetApplicationIcon(frame);
+        frame.setSize(frameHeight(getRezolution()),frameHeight(getRezolution()));
+        setApplicationIcon(frame);
     }    
 }
