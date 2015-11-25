@@ -3,19 +3,17 @@ package calendarapplication;
 import static calendarapplication.CalendarApplication.frameHeight;
 import static calendarapplication.CalendarApplication.getRezolution;
 import static calendarapplication.CalendarApplication.setSizeButtonsNextPrevPanel;
-import static calendarapplication.CalendarApplication.setSizeChangeYearPanel;
-import static calendarapplication.CalendarApplication.setSizeNextPrevPanel;
+import static calendarapplication.CalendarApplication.setSizeLocationChangeYearPanel;
+import static calendarapplication.CalendarApplication.setSizeLocationNextPrevPanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -88,24 +86,21 @@ public class CalendarTable extends JPanel {
         changeYearPanel.setOpaque(false);
         changeYearPanel.setLayout(new GridBagLayout());
         GridBagConstraints cyp = new GridBagConstraints();
-        setSizeChangeYearPanel(changeYearPanel);
+        setSizeLocationChangeYearPanel(changeYearPanel);
         lblYear = new JLabel ("Change year:");
+        lblYear.setHorizontalAlignment(JLabel.LEFT);
+        Font fontYear = (new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
+        lblYear.setFont(fontYear);
         cmbYear = new JComboBox();
-        cyp.weightx = 0.25;
-        cyp.weighty = 0.25;
+        cmbYear.setFont(fontYear);
+        cyp.weightx = 0.5;
+        cyp.weighty = 0.5;
         cyp.fill = GridBagConstraints.BOTH;
         cyp.gridx = 0;
         cyp.gridy = 0;
-        lblYear.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JLabel label = (JLabel) e.getComponent();
-                Dimension size = changeYearPanel.getSize();
-                label.setSize(size);
-                };});
         changeYearPanel.add(lblYear, cyp);
-        cyp.weightx = 0.25;
-        cyp.weighty = 0.25;
+        cyp.weightx = 0.5;
+        cyp.weighty = 0.5;
         cyp.fill = GridBagConstraints.BOTH;
         cyp.gridx = 1;
         cyp.gridy = 0;
@@ -118,7 +113,7 @@ public class CalendarTable extends JPanel {
         nextPrevPanel = new JPanel();
         nextPrevPanel.setOpaque(false);
         nextPrevPanel.setBackground(Color.ORANGE);
-        setSizeNextPrevPanel(nextPrevPanel);
+        setSizeLocationNextPrevPanel(nextPrevPanel);
         nextPrevPanel.setLayout(new GridBagLayout());
         GridBagConstraints btn = new GridBagConstraints();         
         btnPrev = new JButton();
@@ -227,7 +222,11 @@ public class CalendarTable extends JPanel {
         String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         int nod, som; //Number Of Days, Start Of Month
 
-        lblMonth.setText("[   " + months[month] + "   ]"); //Refresh the month label (at the top)  
+        lblMonth.setText(months[month]); //Refresh the month label (at the top)
+        lblMonth.setHorizontalAlignment(JLabel.CENTER);
+        Font fontMonth = (new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/30));
+        lblMonth.setFont(fontMonth);
+                
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
         //Clear table

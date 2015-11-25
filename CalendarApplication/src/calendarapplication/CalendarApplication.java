@@ -1,7 +1,10 @@
 package calendarapplication;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -16,9 +19,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-
+import javax.swing.border.LineBorder;
 
 
 public class CalendarApplication {    
@@ -29,13 +32,31 @@ public class CalendarApplication {
         public void SetBackground(Image image) {
             this.image = image;
         }
+        public ImagePanel() {
+            setOpaque(false);
+        }
         @Override
         public void paintComponent(Graphics G) {
             super.paintComponent(G);
             G.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
+            Graphics2D g2d = (Graphics2D) G.create();     
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.0f));
+            g2d.setColor(getBackground());
+            g2d.fill(getBounds());
+            g2d.dispose();
         }
     }
-          
+    public static class ImageLabel extends JLabel {        
+        Image image;
+        public void SetBackground(Image image) {
+            this.image = image;        
+        }
+        @Override        
+        public void paintComponent(Graphics G) {
+            super.paintComponent(G);
+            G.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);                
+        }
+    }
     //create main frame
     public static class PaintMainFrame extends JFrame  {
             JPanel turnClosePanel;
@@ -43,8 +64,8 @@ public class CalendarApplication {
             ImageIcon iconWeek = new ImageIcon("images\\WEEK_1.png");;
             ImageIcon iconMonthYear = new ImageIcon("images\\MONTH_YEAR_1.png");
             ImageIcon iconSettings = new ImageIcon("images\\SET.png");
-            ImageIcon iconTurn = new ImageIcon("images\\Turn.png");
-            ImageIcon iconClose = new ImageIcon("images\\Close.png");
+            ImageIcon iconTurn = new ImageIcon("images\\turn2.png");
+            ImageIcon iconClose = new ImageIcon("images\\close2.png");
             Image imgWeek;
             Image imgMonthYear;
             //Image img;
@@ -61,7 +82,9 @@ public class CalendarApplication {
     	PaintMainFrame() {
             super("Calendar");           
             ImagePanel backgroundPanel = null; 
-            try {                
+            try {    
+                setUndecorated(true);
+                setBackground(new Color(0, 0, 0, 0));       
                 backgroundPanel = new ImagePanel();
                 backgroundPanel.SetBackground(ImageIO.read(new File("images\\M.png")));
                 this.setOpacity(1);
@@ -88,8 +111,8 @@ public class CalendarApplication {
             //settings panel
             turnClosePanel = new JPanel();
             turnClosePanel.setLayout(new GridBagLayout());
-            turnClosePanel.setOpaque(true);
-            setSizeCloseTurnPanel(turnClosePanel);          
+            turnClosePanel.setOpaque(false);
+            setSizeLocationCloseTurnPanel(turnClosePanel);          
             GridBagConstraints tc = new GridBagConstraints();
             //button turn
             turn = new JButton();
@@ -150,7 +173,7 @@ public class CalendarApplication {
             //************************START BottomPanel*************************
             //settings bottom panel
             bottomPanel.setLayout(new GridBagLayout());
-            setSizeBottomPanel(bottomPanel);
+            setSizeLocationBottomPanel(bottomPanel);
             bottomPanel.setOpaque(false);
             GridBagConstraints bp = new GridBagConstraints(); 
             
@@ -244,21 +267,11 @@ public class CalendarApplication {
             backgroundPanel.add(bottomPanel);
             //******************END BottomPanel*********************************
           
-            
             setContentPane(backgroundPanel);
             pack();            
     	    setVisible(true);        
         }
     }
-//    //cmbYear.addActionListener(new cmbYear_Action());
-//    public static class componentResized implements addComponentListener{
-//        public void componentResized(ComponentEvent e) {
-//                JButton button = (JButton) e.getComponent();
-//                Dimension size = button.getSize();
-//                Image scaled = img.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-//                button.setIcon(new ImageIcon(scaled));
-//            };}
-    
     
     //get rezolution of the screen
     public static Dimension getRezolution(){        
@@ -277,43 +290,45 @@ public class CalendarApplication {
         frame.setIconImage(im);
         frame.show();
     } 
-    public static JPanel setSizeBottomPanel(JPanel pane) {  
+    public static JPanel setSizeLocationBottomPanel(JPanel pane) {  
         Dimension size = new Dimension();
         size.height = (int)(frameHeight(getRezolution())/12); 
         size.width  = (int)(2*frameHeight(getRezolution())/3);
         
         Point location = new Point();
         location.x = (int)(0.15*frameHeight(getRezolution()));
-        location.y = (int)(199*frameHeight(getRezolution())/240 - 5);        
-        
+        location.y = (int) (frameHeight(getRezolution()) 
+                            - size.height
+                            - CalendarTable.CountBorder()
+                            - CalendarTable.CountBorder()/3);      
         pane.setSize(size);
         pane.setLocation(location);
         return (pane); 
     }    
-    public static JPanel setSizeChangeYearPanel(JPanel pane) {
+    public static JPanel setSizeLocationChangeYearPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(5*frameHeight(getRezolution())/24);
-        size.height = (int)(0.05*frameHeight(getRezolution())); 
+        size.height = (int)(frameHeight(getRezolution())/30); 
                
         Point location = new Point();
         location.x = (int)(0.025*frameHeight(getRezolution()));
-        location.y = (int)(0.2125*frameHeight(getRezolution()));        
+        location.y = (int)(11*frameHeight(getRezolution())/48);        
         
         pane.setSize(size);
-        pane.setLocation(location);    
+        pane.setLocation(location);
         return (pane); 
     } 
-    public static JPanel setSizeNextPrevPanel(JPanel pane) {
+    public static JPanel setSizeLocationNextPrevPanel(JPanel pane) {
         Dimension size = new Dimension();
-        size.width  = (int)(0.925*frameHeight(getRezolution()));
+        size.width  = (int)(frameHeight(getRezolution()) - 2*CalendarTable.CountBorder());
         size.height = (int)(0.075*frameHeight(getRezolution())); 
                
         Point location = new Point();
         location.x = (int)(0.026*frameHeight(getRezolution()));
-        location.y = (int)(2*frameHeight(getRezolution())/15);        
+        location.y = (int)(7*frameHeight(getRezolution())/48);        
         
         pane.setSize(size);
-        pane.setLocation(location);   
+        pane.setLocation(location);
         return (pane); 
     }
     public static JButton setSizeButtonsNextPrevPanel(JButton button) {
@@ -321,16 +336,18 @@ public class CalendarApplication {
         size.width  = (int)(0.925*frameHeight(getRezolution())/3);
         size.height = (int)(0.075*frameHeight(getRezolution()));       
         
-        button.setSize(size); 
+        button.setSize(size);
         return (button); 
     } 
-    public static JPanel setSizeCloseTurnPanel(JPanel pane) {
+    public static JPanel setSizeLocationCloseTurnPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(11*frameHeight(getRezolution())/120);
         size.height = (int)(frameHeight(getRezolution())/24); 
                
         Point location = new Point();
-        location.x = (int)(13*frameHeight(getRezolution())/15);
+        location.x = (int)(frameHeight(getRezolution()) 
+                           - CalendarTable.CountBorder()
+                           - size.width);
         location.y = (int)(frameHeight(getRezolution())/40);        
         
         pane.setSize(size);
@@ -344,5 +361,20 @@ public class CalendarApplication {
         JFrame.setDefaultLookAndFeelDecorated(true);
         frame.setSize(frameHeight(getRezolution()),frameHeight(getRezolution()));
         setApplicationIcon(frame);
+        
+        
+        frame.setLayout(null);
+        frame.setVisible(true);       
+        //MovementPanel
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        int a = (size.height*2/3);
+        JPanel graphics =  new  JPanel();
+        graphics.setBounds(0 , 0, a-a/a/3, a/8-6);
+        graphics.setBorder(new LineBorder(new Color(0.0f, 0.0f, 0.0f,0.0f), 50, true));
+        graphics.setOpaque (false);
+        frame.add(graphics);
+        MoveMouseListener mml = new MoveMouseListener(graphics, frame);
+        graphics.addMouseListener(mml);
+        graphics.addMouseMotionListener(mml);
     }    
 }

@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
  
 public class MoveMouseListener implements MouseListener, MouseMotionListener {
+    
     JComponent target;
     JFrame frame;
     Point start_drag;
@@ -22,7 +23,7 @@ public class MoveMouseListener implements MouseListener, MouseMotionListener {
             return (JFrame) target;
         }
         return getFrame(target.getParent());
-    }
+    }   
  
     @Override
     public void mouseClicked(MouseEvent e) {}
@@ -35,8 +36,6 @@ public class MoveMouseListener implements MouseListener, MouseMotionListener {
         this.start_drag = this.getScreenLocation(e);
         this.start_loc = MoveMouseListener.getFrame(this.target).getLocation( );
     }
- 
- 
  
     @Override
     public void mouseReleased(MouseEvent e) {}
