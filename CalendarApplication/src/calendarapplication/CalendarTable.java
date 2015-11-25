@@ -64,8 +64,8 @@ public class CalendarTable extends JPanel {
     Image imgBtnNext;
     Image imgDay;
     JPanel calendarPanel;
-    JButton[][] buttons;
-    int rows = 7, collumns = 7;
+    static JButton[][] buttons;
+    static int rows = 7, collumns = 7;
        
   
     CalendarTable () {
@@ -288,12 +288,13 @@ public class CalendarTable extends JPanel {
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
         //Clear table
-        for (int i=0; i<6; i++){
-            for (int j=0; j<7; j++){
-                mtblCalendar.setValueAt(null, i, j);
+        for (int i=1; i<rows; i++){
+            for (int j=0; j<collumns; j++){
+                buttons[i][j].setText("");
+                buttons[i][j].setVisible(true);
             }  
         }
-        
+
         //Get first day of month and number of days        
         Calendar calTmp = Calendar.getInstance();
         calTmp.set(Calendar.DATE, 1);
@@ -313,33 +314,18 @@ public class CalendarTable extends JPanel {
         for (int i=1; i<=nod; i++){
             int row     =  (i+som-1)/7;
             int column  =  (i+som-1)%7;
-            mtblCalendar.setValueAt(i, row, column);
+            //if (i == realDay && currentMonth == realMonth && currentYear == realYear)
+                 //buttons[row + 1][column].setIcon(new ImageIcon("images\\whitePr.png")); // Тут надо вставлять иконку сегодняшнего дня
+            buttons[row + 1][column].setText("" + i);
+            buttons[row + 1][column].setFont(new Font("Arial", Font.PLAIN, 20));
+            buttons[row + 1][column].setHorizontalTextPosition(AbstractButton.CENTER);
+/*          if (i == nod && row == 5) {
+                for (int j = 0; j < collumns; j++)
+                    buttons[row + 1][j].setVisible(false);      // Holy shit
+            }*/
         }
+    }
 
-        //Apply renderers
-        tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
-    }
-    
-    static class tblCalendarRenderer extends DefaultTableCellRenderer{
-        public Component getTableCellRendererComponent (JTable table, Object value, boolean selected, boolean focused, int row, int column){
-            super.getTableCellRendererComponent(table, value, selected, focused, row, column);
-            if (column == 5 || column == 6){ //Week-end
-                setBackground(new Color(255, 220, 220));
-            }
-            else{ //Week
-                setBackground(new Color(255, 255, 255));
-            }
-            if (value != null){
-                if (Integer.parseInt(value.toString()) == realDay && currentMonth == realMonth && currentYear == realYear){ //Today
-                    setBackground(new Color(220, 220, 255));
-                }
-            }
-            setBorder(null);
-            setForeground(Color.black);
-            return this;
-        }
-    }
-    
     static class btnPrev_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (currentMonth == 0){ //Back one year
