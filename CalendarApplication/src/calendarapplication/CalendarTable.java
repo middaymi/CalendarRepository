@@ -188,7 +188,7 @@ public class CalendarTable extends JPanel {
         GridBagConstraints cp = new GridBagConstraints();
         
         int m, n;
-        for (m = 0; m < 5; m++){
+        for (m = 0; m < 7; m++){
             for (n = 0; n < 7; n++) {
                 cp.gridx = n;
                 cp.gridy = m;
