@@ -21,6 +21,7 @@ import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -63,9 +64,12 @@ public class CalendarTable extends JPanel {
     Image imgBtnNext;
     Image imgDay;
     JPanel calendarPanel;
+    JButton[][] buttons;
+    int rows = 7, collumns = 7;
        
   
     CalendarTable () {
+        buttons = new JButton[rows][collumns];
         iconBtnPrev = new ImageIcon("images\\Left.png");
         iconBtnNext = new ImageIcon("images\\Right.png");
         iconDay = new ImageIcon("images\\white.png");
@@ -187,21 +191,21 @@ public class CalendarTable extends JPanel {
         calendarPanel.setLayout(new GridBagLayout());
         GridBagConstraints cp = new GridBagConstraints();
         
-        int m, n;
-        for (m = 0; m < 5; m++){
-            for (n = 0; n < 7; n++) {
-                cp.gridx = n;
-                cp.gridy = m;
+        for (int i = 0; i < collumns; i++){
+            for (int j = 0; j < rows; j++) {
+                cp.gridx = j;
+                cp.gridy = i;
                 cp.gridwidth = 1;
                 cp.gridheight = 1;
                 cp.weightx = cp.weighty = 1.0;
                 cp.insets = new Insets(5, 5, 5, 5);
-                JButton b = new JButton();
-                b.setIcon(iconDay);
-                b.setBorderPainted(false);
-                b.setFocusPainted(false);
-                b.setContentAreaFilled(false);
-                b.addComponentListener(new ComponentAdapter() {
+                buttons[i][j] = new JButton();
+                //if (i != 0)
+                    buttons[i][j].setIcon(iconDay);
+                buttons[i][j].setBorderPainted(false);
+                buttons[i][j].setFocusPainted(false);
+                buttons[i][j].setContentAreaFilled(false);
+                buttons[i][j].addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     JButton button = (JButton) e.getComponent();
@@ -209,9 +213,8 @@ public class CalendarTable extends JPanel {
                     Image scaled = imgDay.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
                     button.setIcon(new ImageIcon(scaled));
                 };});
-                calendarPanel.add(b, cp);
+                calendarPanel.add(buttons[i][j], cp);
             }
-            n = 0;
         }
         //***********************END calendarPanel******************************
 
@@ -236,8 +239,10 @@ public class CalendarTable extends JPanel {
 
         //Add headers
         String[] headers = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}; 
-        for (int i=0; i<7; i++){
-            mtblCalendar.addColumn(headers[i]);
+        for (int i=0; i<collumns; i++){
+            buttons[0][i].setText(headers[i]); 
+            buttons[0][i].setFont(new Font("Arial", Font.PLAIN, 20));
+            buttons[0][i].setHorizontalTextPosition(AbstractButton.CENTER);
         }
 
 
