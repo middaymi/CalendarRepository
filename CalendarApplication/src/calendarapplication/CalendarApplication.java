@@ -170,6 +170,11 @@ public class CalendarApplication {
             //******************END ChangeYearPanel*****************************           
             
             
+            //************START calendarPanel***********************************
+            backgroundPanel.add(tb.calendarPanel);
+            //************END calendarPanel*************************************
+            
+                       
             //************************START BottomPanel*************************
             //settings bottom panel
             bottomPanel.setLayout(new GridBagLayout());

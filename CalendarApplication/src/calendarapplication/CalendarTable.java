@@ -8,12 +8,16 @@ import static calendarapplication.CalendarApplication.setSizeLocationNextPrevPan
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,20 +57,27 @@ public class CalendarTable extends JPanel {
     JButton betweenLeftAndRight;
     JButton ButtonRight;
     ImageIcon iconBtnPrev;
-    ImageIcon iconBtnNext;           
+    ImageIcon iconBtnNext;
+    ImageIcon iconDay;
     Image imgBtnPrev;
     Image imgBtnNext;
+    Image imgDay;
+    JPanel calendarPanel;
        
   
     CalendarTable () {
         iconBtnPrev = new ImageIcon("images\\Left.png");
         iconBtnNext = new ImageIcon("images\\Right.png");
+        iconDay = new ImageIcon("images\\white.png");
+        
                                  
         imgBtnPrev = iconBtnPrev.getImage();
         imgBtnNext = iconBtnNext.getImage();
-                     
+        imgDay = iconDay.getImage();
+        
         iconBtnPrev = new ImageIcon(imgBtnPrev);
-        iconBtnNext = new ImageIcon(imgBtnNext);          
+        iconBtnNext = new ImageIcon(imgBtnNext);
+        iconDay = new ImageIcon(imgDay);
         
         //Look and feel
         try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -162,7 +173,47 @@ public class CalendarTable extends JPanel {
         mtblCalendar = new DefaultTableModel(){public boolean isCellEditable(int rowIndex, int mColIndex){return false;}};
         tblCalendar = new JTable(mtblCalendar);
         stblCalendar = new JScrollPane(tblCalendar);
-
+        
+        
+        //************************START calendarPanel***************************
+        calendarPanel = new JPanel();
+        calendarPanel.setSize(53*frameHeight(getRezolution())/60,
+                              13*frameHeight(getRezolution())/24);
+        calendarPanel.setLocation((int)((frameHeight(getRezolution()) 
+                                         - calendarPanel.getSize().width)/2), 
+                                  (int) (frameHeight(getRezolution())*0.2875));
+        calendarPanel.setBackground(Color.red);
+        calendarPanel.setOpaque(false);
+        calendarPanel.setLayout(new GridBagLayout());
+        GridBagConstraints cp = new GridBagConstraints();
+        
+        int m, n;
+        for (m = 0; m < 5; m++){
+            for (n = 0; n < 7; n++) {
+                cp.gridx = n;
+                cp.gridy = m;
+                cp.gridwidth = 1;
+                cp.gridheight = 1;
+                cp.weightx = cp.weighty = 1.0;
+                cp.insets = new Insets(5, 5, 5, 5);
+                JButton b = new JButton();
+                b.setIcon(iconDay);
+                b.setBorderPainted(false);
+                b.setFocusPainted(false);
+                b.setContentAreaFilled(false);
+                b.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    JButton button = (JButton) e.getComponent();
+                    Dimension size = button.getSize();
+                    Image scaled = imgDay.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                    button.setIcon(new ImageIcon(scaled));
+                };});
+                calendarPanel.add(b, cp);
+            }
+            n = 0;
+        }
+        //***********************END calendarPanel******************************
 
         //add panels (calendar, month, et) 
 
@@ -173,7 +224,7 @@ public class CalendarTable extends JPanel {
 
         //Make frame visible
         //setVisible(true);
-
+        
         //Get real month/year
         GregorianCalendar cal = new GregorianCalendar(); //Create calendar
         realDay = cal.get(GregorianCalendar.DAY_OF_MONTH); //Get day
@@ -216,6 +267,8 @@ public class CalendarTable extends JPanel {
         //Register action listeners
         cmbYear.addActionListener(new cmbYear_Action());
     }
+    
+       
     
     public static void refreshCalendar(int month, int year){
         //Variables
@@ -323,10 +376,10 @@ public class CalendarTable extends JPanel {
     JPanel nextPrevPanel() {
         return nextPrevPanel;
     }
-    
-    JPanel pnlCalendar() {
-        return pnlCalendar;
-    }  
+      
+    JPanel calendarPanel() {
+        return calendarPanel;
+    }
     
     public static int CountBorder() {
         int count = 0;
