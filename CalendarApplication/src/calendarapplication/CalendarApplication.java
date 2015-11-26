@@ -10,6 +10,8 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -133,6 +135,12 @@ public class CalendarApplication {
                 Image scaled = imgTurn.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(scaled));
             };});
+            //ActionTurnBotton
+            turn.addActionListener(new ActionListener() {
+               public void actionPerformed(ActionEvent e) {
+              setState  (JFrame.ICONIFIED);                      
+               }
+            });
             turnClosePanel.add(turn, tc);
             
             //button close
@@ -154,6 +162,12 @@ public class CalendarApplication {
                 Image scaled = imgClose.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(scaled));
             };});
+            //ActionCloseBotton
+            close.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {	
+	            System.exit(0);
+		}
+	    });
             turnClosePanel.add(close, tc);
             backgroundPanel.add(turnClosePanel); 
             //************************END TurnClosePanel************************          
