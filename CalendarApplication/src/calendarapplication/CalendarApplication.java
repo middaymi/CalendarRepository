@@ -3,6 +3,7 @@ package calendarapplication;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -17,12 +18,14 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
@@ -183,6 +186,7 @@ public class CalendarApplication {
             backgroundPanel.add(tb.changeYearPanel);
             //******************END ChangeYearPanel*****************************           
             
+            backgroundPanel.add(tb.weekPanel);
             
             //************START calendarPanel***********************************
             backgroundPanel.add(tb.calendarPanel);
@@ -197,6 +201,9 @@ public class CalendarApplication {
             GridBagConstraints bp = new GridBagConstraints(); 
             
             buttonWeek = new JButton();
+            buttonWeek.setText("  WEEK");
+            buttonWeek.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
+            buttonWeek.setHorizontalTextPosition(AbstractButton.CENTER);
             buttonWeek.setIcon(iconWeek);
             buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
             buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
@@ -220,6 +227,9 @@ public class CalendarApplication {
         
             buttonMonth = new JButton();
             buttonMonth.setIcon(iconMonthYear);
+            buttonMonth.setText("MONTH");
+            buttonMonth.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
+            buttonMonth.setHorizontalTextPosition(AbstractButton.CENTER);
             buttonMonth.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonMonth.setBorderPainted(false);
@@ -242,6 +252,9 @@ public class CalendarApplication {
         
             buttonYear = new JButton();
             buttonYear.setIcon(iconMonthYear);
+            buttonYear.setText("YEAR");
+            buttonYear.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
+            buttonYear.setHorizontalTextPosition(AbstractButton.CENTER);
             buttonYear.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
             buttonYear.setBorderPainted(false);
