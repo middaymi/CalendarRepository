@@ -5,6 +5,7 @@ import static calendarapplication.CalendarApplication.getRezolution;
 import static calendarapplication.CalendarApplication.setSizeButtonsNextPrevPanel;
 import static calendarapplication.CalendarApplication.setSizeLocationChangeYearPanel;
 import static calendarapplication.CalendarApplication.setSizeLocationNextPrevPanel;
+import static calendarapplication.CalendarApplication.PaintMainFrame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -393,8 +394,8 @@ public class CalendarTable extends JPanel {
 //            currentMonth = currentMonth - 1;
 //            refreshCalendar(currentMonth, currentYear);
             //calendarPanel.setVisible(false);
-            test();
-            System.out.println("YEEEEES");
+            JPanel panel = test();
+            PaintMainFrame.changeCentralPanel(panel);
         }
     }
     private JPanel test() {

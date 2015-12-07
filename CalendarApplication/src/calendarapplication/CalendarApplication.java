@@ -64,8 +64,10 @@ public class CalendarApplication {
     }
     //create main frame
     public static class PaintMainFrame extends JFrame  {
-            JPanel turnClosePanel;
+            static JPanel turnClosePanel;
             JPanel bottomPanel = new JPanel();
+            static CalendarTable tb = new CalendarTable();
+            static ImagePanel backgroundPanel = null;
             ImageIcon iconWeek = new ImageIcon("images\\WEEK_1.png");;
             ImageIcon iconMonthYear = new ImageIcon("images\\MONTH_YEAR_1.png");
             ImageIcon iconSettings = new ImageIcon("images\\SET.png");
@@ -86,7 +88,6 @@ public class CalendarApplication {
         
     	PaintMainFrame() {
             super("Calendar");           
-            ImagePanel backgroundPanel = null; 
             try {    
                 setUndecorated(true);
                 setBackground(new Color(0, 0, 0, 0));       
@@ -173,14 +174,11 @@ public class CalendarApplication {
 	    });
             turnClosePanel.add(close, tc);
             backgroundPanel.add(turnClosePanel); 
-            //************************END TurnClosePanel************************          
-            
+            //************************END TurnClosePanel************************                      
           
             //******************START nextPrevPanel*****************************
-            CalendarTable tb = new CalendarTable();
             backgroundPanel.add(tb.nextPrevPanel);  
-            //******************END nextPrevPanel*******************************
-          
+            //******************END nextPrevPanel*******************************          
 
             //******************START ChangeYearPanel*************************** 
             backgroundPanel.add(tb.changeYearPanel);
@@ -303,7 +301,16 @@ public class CalendarApplication {
             pack();            
     	    setVisible(true);        
         }
+        
+        public static void changeCentralPanel(JPanel panel) {         
+            backgroundPanel.remove(tb.changeYearPanel);
+            backgroundPanel.remove(tb.weekPanel);
+            backgroundPanel.remove(tb.calendarPanel);
+            backgroundPanel.add(panel);
+        }
     }
+    
+
     
     //get rezolution of the screen
     public static Dimension getRezolution(){        
