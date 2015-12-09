@@ -186,7 +186,6 @@ public class CalendarApplication {
                        
             //************************START BottomPanel*************************
             //settings bottom panel
-            
             backgroundPanel.add(tb.bottomPanel);
             //******************END BottomPanel*********************************
           
@@ -200,7 +199,9 @@ public class CalendarApplication {
                 backgroundPanel.remove(tb.changeYearPanel);
                 backgroundPanel.remove(tb.weekPanel);
                 backgroundPanel.remove(tb.calendarPanel);
+                backgroundPanel.remove(tb.bottomPanel);
                 backgroundPanel.add(panel);
+                backgroundPanel.add(tb.bottomPanel);
             }
             if (type == panelType.MONTHPANEL) {
                 backgroundPanel.remove(tb.dayPanel);

@@ -55,7 +55,7 @@ public class CalendarTable extends JPanel {
     JButton[][] buttons;
     int rows = 6, collumns = 7;  
     JPanel pane;
-    
+    boolean isInit;
     
     
     static panelType panelflag; 
@@ -68,7 +68,7 @@ public class CalendarTable extends JPanel {
     
     String[] headers = {"Mon", "Tue", "Wed ", "Thu   ", "Fri  ", "Sat", "Sun"}; 
     String[] months =  {"January", "February", "March", "April", "May", "June", 
-                            "July", "August", "September", "October", "November", "December"};
+                        "July", "August", "September", "October", "November", "December"};
     
     int currentPosition = 0;
     Sizes size;
@@ -82,6 +82,7 @@ public class CalendarTable extends JPanel {
         makeNextPrevPanel();
         makeBottomPanel();
         panelflag = panelType.MONTHPANEL;
+        isInit = false;
         
         imgNotVisible = iconNotVisible.getImage();                               
         imgBtnPrev = iconBtnPrev.getImage();
@@ -164,7 +165,7 @@ public class CalendarTable extends JPanel {
     }
     
     
-    private void refreshCalendar(int month, int year){
+    private void refreshCalendar(int month, int year) {
         int nod, som; //Number Of Days, Start Of Month
         
         lblMonth.setText(months[month]); //Refresh the month label (at the top)
@@ -221,10 +222,7 @@ public class CalendarTable extends JPanel {
                     buttons[i][j].setFont(new Font("Arial", Font.PLAIN, size.frameHeight(size.getRezolution())/60));
                     buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER); 
                     buttons[i][j].addActionListener(new selectedDay_Action());
-                }
-                
-                //if not current day
-                else {
+                } else { //if not current day
                     buttons[i][j].setBackground(Color.lightGray);
                     //if not used
                     if ((j < som && i == 0) || (currentPosition > nod)) {
@@ -240,9 +238,11 @@ public class CalendarTable extends JPanel {
                         }
                     }
                 }
-                calendarPanel.add(buttons[i][j], cp);
+                if (isInit == false)
+                  calendarPanel.add(buttons[i][j], cp);
             }
         }
+        isInit = true;
         calendarPanel.setVisible(true);
     }    
     
@@ -261,9 +261,7 @@ public class CalendarTable extends JPanel {
     JPanel weekPanel() {
         return weekPanel;
     }
-    
-     
-    
+
     private JPanel makeWeekPanel(){
         weekPanel = new JPanel();
         weekPanel.setOpaque(false);
@@ -307,7 +305,7 @@ public class CalendarTable extends JPanel {
 //                                         - calendarPanel.getSize().width)/2), 
 //                                  (int) (frameHeight(getRezolution())*37/120));
         size.sizeLocationCentralPanel(calendarPanel);
-        calendarPanel.setBackground(Color.red);
+        //calendarPanel.setBackground(Color.red);
         calendarPanel.setOpaque(false);
         calendarPanel.setLayout(new GridBagLayout());
         buttons = new JButton[rows][collumns];
@@ -398,12 +396,8 @@ public class CalendarTable extends JPanel {
         cyp.gridy = 0;
         changeYearPanel.add(cmbYear, cyp);
         return changeYearPanel;
-    }  
+    }
 
-    
-
-    
-    
     class btnPrev_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (panelflag == panelType.DAYPANEL) {
@@ -414,14 +408,13 @@ public class CalendarTable extends JPanel {
                            Integer.parseInt(dateParts[2]),
                            direction.PREV);               
             } else {
-            if (currentMonth == 0){ //Back one year
-                currentMonth = 11;
-                currentYear -= 1;
-            } else{ //Back one month
-                currentMonth -= 1;
-            }
-            calendarPanel.setVisible(false);
-            refreshCalendar(currentMonth, currentYear);
+                if (currentMonth == 0){ //Back one year
+                    currentMonth = 11;
+                    currentYear -= 1;
+                } else{ //Back one month
+                    currentMonth -= 1;
+                }
+                refreshCalendar(currentMonth, currentYear);
             }
         }
     }
@@ -448,15 +441,12 @@ public class CalendarTable extends JPanel {
             }
         }
     }
-    
-     
-    
+
     class cmbYear_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (cmbYear.getSelectedItem() != null){
                 String b = cmbYear.getSelectedItem().toString();
                 currentYear = Integer.parseInt(b);
-                //calendarPanel.setVisible(false);
                 refreshCalendar(currentMonth, currentYear);
             }
         }
@@ -473,22 +463,22 @@ public class CalendarTable extends JPanel {
     }
     
     class selectedMonth_Action implements ActionListener{        
-        public void actionPerformed(ActionEvent e) {         
+        public void actionPerformed(ActionEvent e) {
+            if (panelflag == panelType.MONTHPANEL)
+                return;
             PaintMainFrame.changeCentralPanel(calendarPanel, panelType.MONTHPANEL);
-            JButton btn = (JButton)e.getSource();
             panelflag = panelType.MONTHPANEL;
             refreshCalendar(currentMonth, currentYear);
         }
     }
     
     private JPanel makeDayPanel() {
-        calendarPanel.setVisible(false);
-        changeYearPanel.setVisible(false);
         pane = new JPanel();
         JPanel paneRight = new JPanel();
         JPanel paneLeft = new JPanel();
         size.sizeLocationCentralPanel(pane);
-        pane.setBackground(Color.red);
+        pane.setOpaque(false);
+        //pane.setBackground(Color.red);
         pane.setVisible(true); 
         return pane;
     }
