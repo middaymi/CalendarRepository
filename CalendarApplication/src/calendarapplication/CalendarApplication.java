@@ -1,5 +1,8 @@
 package calendarapplication;
 
+
+import calendarapplication.Sizes;
+import calendarapplication.panelType;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,8 +32,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
+
 public class CalendarApplication {    
- 
+ static Sizes size;
     //for create image on the frame
     public static class ImagePanel extends JPanel {        
         Image image;
@@ -64,30 +68,26 @@ public class CalendarApplication {
     }
     //create main frame
     public static class PaintMainFrame extends JFrame  {
+            
             static JPanel turnClosePanel;
-            JPanel bottomPanel = new JPanel();
+            
+            
             static CalendarTable tb = new CalendarTable();
             static ImagePanel backgroundPanel = null;
-            ImageIcon iconWeek = new ImageIcon("images\\WEEK_1.png");;
-            ImageIcon iconMonthYear = new ImageIcon("images\\MONTH_YEAR_1.png");
-            ImageIcon iconSettings = new ImageIcon("images\\SET.png");
+            
+          
+            
             ImageIcon iconTurn = new ImageIcon("images\\turn2.png");
             ImageIcon iconClose = new ImageIcon("images\\close2.png");
-            Image imgWeek;
-            Image imgMonthYear;
-            //Image img;
-            Image imgSettings;
             Image imgTurn;
             Image imgClose;
-            JButton buttonWeek = new JButton();
-            JButton buttonMonth = new JButton();
-            JButton buttonYear = new JButton();;
-            JButton buttonSettings = new JButton();;
-            JButton turn = new JButton();;
+            
+            JButton turn = new JButton();
             JButton close = new JButton();
         
     	PaintMainFrame() {
-            super("Calendar");           
+            super("Calendar"); 
+            size = new Sizes();
             try {    
                 setUndecorated(true);
                 setBackground(new Color(0, 0, 0, 0));       
@@ -98,15 +98,8 @@ public class CalendarApplication {
     	    } 
             setDefaultCloseOperation(EXIT_ON_CLOSE); 
                                 
-            imgWeek = iconWeek.getImage();
-            imgMonthYear = iconMonthYear.getImage();
-            imgSettings = iconSettings.getImage();
             imgTurn = iconTurn.getImage();
             imgClose = iconClose.getImage();
-           
-            iconWeek = new ImageIcon(imgWeek);
-            iconMonthYear = new ImageIcon(imgMonthYear);
-            iconSettings = new ImageIcon(imgSettings);
             iconTurn = new ImageIcon(imgTurn);
             iconClose = new ImageIcon(imgClose);       
                                                                                           
@@ -118,7 +111,7 @@ public class CalendarApplication {
             turnClosePanel = new JPanel();
             turnClosePanel.setLayout(new GridBagLayout());
             turnClosePanel.setOpaque(false);
-            setSizeLocationCloseTurnPanel(turnClosePanel);          
+            size.setSizeLocationCloseTurnPanel(turnClosePanel);          
             GridBagConstraints tc = new GridBagConstraints();
             //button turn
             turn = new JButton();
@@ -193,108 +186,8 @@ public class CalendarApplication {
                        
             //************************START BottomPanel*************************
             //settings bottom panel
-            bottomPanel.setLayout(new GridBagLayout());
-            setSizeLocationBottomPanel(bottomPanel);
-            bottomPanel.setOpaque(false);
-            GridBagConstraints bp = new GridBagConstraints(); 
             
-            buttonWeek = new JButton();
-            buttonWeek.setText("  WEEK");
-            buttonWeek.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
-            buttonWeek.setHorizontalTextPosition(AbstractButton.CENTER);
-            buttonWeek.setIcon(iconWeek);
-            buttonWeek.setPressedIcon(new ImageIcon("images\\WeekPr.png"));
-            buttonWeek.setRolloverIcon(new ImageIcon("images\\WeekPr.png"));
-            buttonWeek.setBorderPainted(false);
-            buttonWeek.setFocusPainted(false);
-            buttonWeek.setContentAreaFilled(false);
-            bp.weightx = 0.25;
-            bp.weighty = 0.25;
-            bp.fill = GridBagConstraints.BOTH;
-            bp.gridx = 0;
-            bp.gridy = 0;
-            buttonWeek.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton button = (JButton) e.getComponent();
-                Dimension size = button.getSize();
-                Image scaled = imgWeek.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                button.setIcon(new ImageIcon(scaled));
-            };});
-            bottomPanel.add(buttonWeek, bp);
-        
-            buttonMonth = new JButton();
-            buttonMonth.setIcon(iconMonthYear);
-            buttonMonth.setText("MONTH");
-            buttonMonth.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
-            buttonMonth.setHorizontalTextPosition(AbstractButton.CENTER);
-            buttonMonth.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
-            buttonMonth.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
-            buttonMonth.setBorderPainted(false);
-            buttonMonth.setFocusPainted(false);
-            buttonMonth.setContentAreaFilled(false);
-            bp.fill = GridBagConstraints.BOTH;
-            bp.weightx = 0.25;
-            bp.weighty = 0.25;
-            bp.gridx = 1;
-            bp.gridy = 0;
-            buttonMonth.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton button = (JButton) e.getComponent();
-                Dimension size = button.getSize();
-                Image scaled = imgMonthYear.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                button.setIcon(new ImageIcon(scaled));
-                };});
-            bottomPanel.add(buttonMonth, bp);
-        
-            buttonYear = new JButton();
-            buttonYear.setIcon(iconMonthYear);
-            buttonYear.setText("YEAR");
-            buttonYear.setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
-            buttonYear.setHorizontalTextPosition(AbstractButton.CENTER);
-            buttonYear.setPressedIcon(new ImageIcon("images\\MonthAndYearPr.png"));
-            buttonYear.setRolloverIcon(new ImageIcon("images\\MonthAndYearPr.png"));
-            buttonYear.setBorderPainted(false);
-            buttonYear.setFocusPainted(false);
-            buttonYear.setContentAreaFilled(false);
-            bp.fill = GridBagConstraints.BOTH;
-            bp.weightx = 0.25;
-            bp.weighty = 0.25;
-            bp.gridx = 2;
-            bp.gridy = 0;
-            buttonYear.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton button = (JButton) e.getComponent();
-                Dimension size = button.getSize();
-                Image scaled = imgMonthYear.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                button.setIcon(new ImageIcon(scaled));
-                };}); 
-            bottomPanel.add(buttonYear, bp);
-        
-            buttonSettings = new JButton();
-            buttonSettings.setIcon(iconSettings);
-            buttonSettings.setPressedIcon(new ImageIcon("images\\SetPr.png"));
-            buttonSettings.setRolloverIcon(new ImageIcon("images\\SetPr.png"));
-            buttonSettings.setBorderPainted(false);
-            buttonSettings.setFocusPainted(false);
-            buttonSettings.setContentAreaFilled(false);
-            bp.fill = GridBagConstraints.BOTH;
-            bp.weightx = 0.25;
-            bp.weighty = 0.25;
-            bp.gridx = 3;
-            bp.gridy = 0;
-            buttonSettings.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton button = (JButton) e.getComponent();
-                Dimension size = button.getSize();
-                Image scaled = imgSettings.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                button.setIcon(new ImageIcon(scaled));
-                };});
-            bottomPanel.add(buttonSettings, bp);          
-            backgroundPanel.add(bottomPanel);
+            backgroundPanel.add(tb.bottomPanel);
             //******************END BottomPanel*********************************
           
             setContentPane(backgroundPanel);
@@ -302,103 +195,40 @@ public class CalendarApplication {
     	    setVisible(true);        
         }
         
-        public static void changeCentralPanel(JPanel panel) {         
-            backgroundPanel.remove(tb.changeYearPanel);
-            backgroundPanel.remove(tb.weekPanel);
-            backgroundPanel.remove(tb.calendarPanel);
-            backgroundPanel.add(panel);
+        public static void changeCentralPanel(JPanel panel, panelType type) {
+            if (type == panelType.DAYPANEL) {
+                backgroundPanel.remove(tb.changeYearPanel);
+                backgroundPanel.remove(tb.weekPanel);
+                backgroundPanel.remove(tb.calendarPanel);
+                backgroundPanel.add(panel);
+            }
+            if (type == panelType.MONTHPANEL) {
+                backgroundPanel.remove(tb.dayPanel);
+                backgroundPanel.remove(tb.bottomPanel);
+                backgroundPanel.add(tb.changeYearPanel);
+                backgroundPanel.add(tb.weekPanel);
+                backgroundPanel.add(tb.calendarPanel);
+                backgroundPanel.add(tb.bottomPanel);
+            }
         }
     }
-    
-
-    
-    //get rezolution of the screen
-    public static Dimension getRezolution(){        
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        return (size);        
-    }
-    //get needed size of frame
-    public static int frameHeight(Dimension exSize){
-        return(exSize.height*2/3);
-    }
-    //set icon on the frame and application's icon
+     //set icon on the frame and application's icon
     private static void setApplicationIcon(JFrame frame) {
         Image im = Toolkit.getDefaultToolkit().getImage("images\\48.png");
         frame.setIconImage(im);
         frame.show();
-    } 
-    public static JPanel setSizeLocationBottomPanel(JPanel pane) {  
-        Dimension size = new Dimension();
-        size.height = (int)(frameHeight(getRezolution())/12); 
-        size.width  = (int)(2*frameHeight(getRezolution())/3);
-        
-        Point location = new Point();
-        location.x = (int)(0.15*frameHeight(getRezolution()));
-        location.y = (int) (frameHeight(getRezolution()) 
-                            - size.height
-                            - CalendarTable.CountBorder()
-                            - CalendarTable.CountBorder()/3);      
-        pane.setSize(size);
-        pane.setLocation(location);
-        return (pane); 
-    }    
-    public static JPanel setSizeLocationChangeYearPanel(JPanel pane) {
-        Dimension size = new Dimension();
-        size.width  = (int)(5*frameHeight(getRezolution())/24);
-        size.height = (int)(frameHeight(getRezolution())/30); 
-               
-        Point location = new Point();
-        location.x = (int)(0.025*frameHeight(getRezolution()));
-        location.y = (int)(11*frameHeight(getRezolution())/48);        
-        
-        pane.setSize(size);
-        pane.setLocation(location);
-        return (pane); 
-    } 
-    public static JPanel setSizeLocationNextPrevPanel(JPanel pane) {
-        Dimension size = new Dimension();
-        size.width  = (int)(frameHeight(getRezolution()) - 2*CalendarTable.CountBorder());
-        size.height = (int)(0.075*frameHeight(getRezolution())); 
-               
-        Point location = new Point();
-        location.x = (int)(0.026*frameHeight(getRezolution()));
-        location.y = (int)(7*frameHeight(getRezolution())/48);        
-        
-        pane.setSize(size);
-        pane.setLocation(location);
-        return (pane); 
     }
-    public static JButton setSizeButtonsNextPrevPanel(JButton button) {
-        Dimension size = new Dimension();
-        size.width  = (int)(0.925*frameHeight(getRezolution())/3);
-        size.height = (int)(0.075*frameHeight(getRezolution()));       
-        
-        button.setSize(size);
-        return (button); 
-    } 
-    public static JPanel setSizeLocationCloseTurnPanel(JPanel pane) {
-        Dimension size = new Dimension();
-        size.width  = (int)(11*frameHeight(getRezolution())/120);
-        size.height = (int)(frameHeight(getRezolution())/24); 
-               
-        Point location = new Point();
-        location.x = (int)(frameHeight(getRezolution()) 
-                           - CalendarTable.CountBorder()
-                           - size.width);
-        location.y = (int)(frameHeight(getRezolution())/40);        
-        
-        pane.setSize(size);
-        pane.setLocation(location);   
-        return (pane); 
-    }
+    
+
+    
+    
     
     
     public static void main(String[] args) {
         PaintMainFrame frame = new PaintMainFrame();
         JFrame.setDefaultLookAndFeelDecorated(true);
-        frame.setSize(frameHeight(getRezolution()),frameHeight(getRezolution()));
         setApplicationIcon(frame);
-        
+        frame.setSize(size.frameHeight(size.getRezolution()),size.frameHeight(size.getRezolution()));
         
         frame.setLayout(null);
         frame.setVisible(true);       
