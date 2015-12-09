@@ -6,12 +6,16 @@ import static calendarapplication.CalendarApplication.setSizeButtonsNextPrevPane
 import static calendarapplication.CalendarApplication.setSizeLocationChangeYearPanel;
 import static calendarapplication.CalendarApplication.setSizeLocationNextPrevPanel;
 import static calendarapplication.CalendarApplication.PaintMainFrame;
+import static calendarapplication.CalendarApplication.frameHeight;
+import static calendarapplication.CalendarApplication.getRezolution;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -27,9 +31,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+enum panelType {DAYPANEL, MONTHPANEL}
+enum direction {PREV, NEXT}
+
 public class CalendarTable extends JPanel {
 
     int realYear, realMonth, realDay, currentYear, currentMonth;
+    int currentDay;
     JLabel lblMonth, lblYear;
     JComboBox cmbYear;    
     JPanel changeYearPanel;
@@ -48,7 +56,11 @@ public class CalendarTable extends JPanel {
     Image imgNotVisible;    
     JButton[][] buttons;
     int rows = 6, collumns = 7;  
-    JPanel p;
+    JPanel pane;
+    
+    
+    
+    static panelType panelflag; 
     
     ImageIcon iconCurrentDay = new ImageIcon("images\\whitePr.png");
     ImageIcon iconNotVisible = new ImageIcon("images\\grey.png");
@@ -60,12 +72,16 @@ public class CalendarTable extends JPanel {
     String[] months =  {"January", "February", "March", "April", "May", "June", 
                             "July", "August", "September", "October", "November", "December"};
     
+    int currentPosition = 0;
+    
+    
     CalendarTable () {
         
         makeWeekPanel();
         makeCalendarPanel(); 
         makeChangeYearPanel();
         makeNextPrevPanel();
+        panelflag = panelType.MONTHPANEL;
         
         imgNotVisible = iconNotVisible.getImage();                               
         imgBtnPrev = iconBtnPrev.getImage();
@@ -103,14 +119,59 @@ public class CalendarTable extends JPanel {
         cmbYear.addActionListener(new cmbYear_Action());
     }        
  
+    private void refreshDay (int day, int month, int year, direction d) {
+        int nod;
+        
+        if (d == direction.NEXT) {
+            Calendar calTmp = Calendar.getInstance();
+            calTmp.set(Calendar.DATE, 1);
+            calTmp.set(Calendar.MONTH, month);
+            calTmp.set(Calendar.YEAR, year);
+            calTmp.set(Calendar.DAY_OF_MONTH, 1);
+            nod = calTmp.getActualMaximum(Calendar.DAY_OF_MONTH);
+            if (day == nod) {
+                day = 1;
+                if(month == 12) {
+                    month = 1;
+                    year++;
+                } else {
+                    month++;
+                }
+            } else {
+                day++;
+            }
+        }
+        if (d == direction.PREV) {
+            if (day == 1) {
+                if (month == 1) {
+                    month = 12;
+                    year--;
+                } else {
+                    month--;
+                }
+                Calendar calTmp = Calendar.getInstance();
+                calTmp.set(Calendar.DATE, 1);
+                calTmp.set(Calendar.MONTH, month);
+                calTmp.set(Calendar.YEAR, year);
+                calTmp.set(Calendar.DAY_OF_MONTH, 1);
+                nod = calTmp.getActualMaximum(Calendar.DAY_OF_MONTH);
+                day = nod; 
+            } else {
+                day--;
+            }
+        }
+        lblMonth.setText("" + day + "." + month + "." + year);
+    }
+    
     
     private void refreshCalendar(int month, int year){
         int nod, som; //Number Of Days, Start Of Month
-
+        
         lblMonth.setText(months[month]); //Refresh the month label (at the top)
         lblMonth.setHorizontalAlignment(JLabel.CENTER);
         Font fontMonth = (new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/30));
         lblMonth.setFont(fontMonth);
+        
                 
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box   
         
@@ -120,6 +181,7 @@ public class CalendarTable extends JPanel {
             for (int n = 0; n < collumns; n++){
                 buttons[m][n].setText("");
                 buttons[m][n].setBackground(Color.LIGHT_GRAY);
+                buttons[m][n].removeActionListener(new selectedDay_Action());
             }  
         }
 
@@ -148,30 +210,33 @@ public class CalendarTable extends JPanel {
                 cp.gridheight = 1;
                 cp.weightx = cp.weighty = 0.5;
                 cp.insets = new Insets(5, 5, 5, 5);                
-                cp.fill = GridBagConstraints.BOTH;            
+                cp.fill = GridBagConstraints.BOTH; 
+                
+                currentPosition = (i+1)*7-som-(7-(j+1));
                 //set current day
-                if (((i+1)*7-som-(7-(j+1))) == realDay && currentMonth == realMonth && currentYear == realYear){
+                if (currentPosition == realDay && currentMonth == realMonth && currentYear == realYear &&
+                    currentPosition<= nod){
                     buttons[i][j].setBackground(Color.red);
-                 
-                    if (((i+1)*7-som-(7-(j+1))) <= nod) {
-                        buttons[i][j].setText("" + ((i+1)*7-som-(7-(j+1))));
-                        buttons[i][j].setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
-                        buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER);                        
-                    }
+                    buttons[i][j].setText("" + currentPosition);
+                    buttons[i][j].setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
+                    buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER); 
+                    buttons[i][j].addActionListener(new selectedDay_Action());
                 }
                 
                 //if not current day
                 else {
                     buttons[i][j].setBackground(Color.lightGray);
-                    if ((j < som && i == 0) || (((i+1)*7-som-(7-(j+1))) > nod)) {
-                        //buttons[i][j].setIcon(iconNotVisible);
+                    //if not used
+                    if ((j < som && i == 0) || (currentPosition > nod)) {
                         buttons[i][j].setText(" ");
                         buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER);
-                    } else { 
-                        if (((i+1)*7-som-(7-(j+1))) <= nod) {
-                            buttons[i][j].setText("" + ((i+1)*7-som-(7-(j+1))));
+                    } else {
+                        //if used
+                        if (currentPosition <= nod) {
+                            buttons[i][j].setText("" + currentPosition);
                             buttons[i][j].setFont(new Font("Arial", Font.PLAIN, frameHeight(getRezolution())/60));
                             buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER);
+                            buttons[i][j].addActionListener(new selectedDay_Action());
                         }
                     }
                 }
@@ -236,13 +301,29 @@ public class CalendarTable extends JPanel {
         return weekPanel;    
     }
     
+    private JPanel sizeCentralPanel(JPanel pane) {
+        Dimension size = new Dimension();
+        size.width  = (int)(53*frameHeight(getRezolution())/60);
+        size.height = (int)(13*frameHeight(getRezolution())/24);         
+        
+        Point location = new Point();
+        location.x = (int)((frameHeight(getRezolution()) - size.width)/2);
+        location.y = (int)(frameHeight(getRezolution())*37/120); 
+        
+        pane.setSize(size);
+        pane.setLocation(location);
+        
+        return pane;
+    }
+    
     private JPanel makeCalendarPanel(){
         calendarPanel = new JPanel();
-        calendarPanel.setSize(53*frameHeight(getRezolution())/60,
-                              13*frameHeight(getRezolution())/24);
-        calendarPanel.setLocation((int)((frameHeight(getRezolution()) 
-                                         - calendarPanel.getSize().width)/2), 
-                                  (int) (frameHeight(getRezolution())*37/120));
+//        calendarPanel.setSize(53*frameHeight(getRezolution())/60,
+//                              13*frameHeight(getRezolution())/24);
+//        calendarPanel.setLocation((int)((frameHeight(getRezolution()) 
+//                                         - calendarPanel.getSize().width)/2), 
+//                                  (int) (frameHeight(getRezolution())*37/120));
+        sizeCentralPanel(calendarPanel);
         calendarPanel.setBackground(Color.red);
         calendarPanel.setOpaque(false);
         calendarPanel.setLayout(new GridBagLayout());
@@ -254,7 +335,6 @@ public class CalendarTable extends JPanel {
                 buttons[i][j].setBorderPainted(false);
                 buttons[i][j].setFocusPainted(false);
 //                buttons[i][j].setContentAreaFilled(false);
-                buttons[i][j].addActionListener(new selectedDay_Action());
             }
         }
         
@@ -343,33 +423,51 @@ public class CalendarTable extends JPanel {
     
     class btnPrev_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
+            if (panelflag == panelType.DAYPANEL) {
+                String dateText = lblMonth.getText();
+                String[] dateParts = dateText.split("\\.");
+                refreshDay(Integer.parseInt(dateParts[0]),
+                           Integer.parseInt(dateParts[1]),
+                           Integer.parseInt(dateParts[2]),
+                           direction.PREV);               
+            } else {
             if (currentMonth == 0){ //Back one year
                 currentMonth = 11;
                 currentYear -= 1;
-            }
-            else{ //Back one month
+            } else{ //Back one month
                 currentMonth -= 1;
             }
             calendarPanel.setVisible(false);
             refreshCalendar(currentMonth, currentYear);
-            calendarPanel.setVisible(true);
+            }
         }
     }
     class btnNext_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
-        
-            if (currentMonth == 11){ //Foward one year
-                currentMonth = 0;
-                currentYear += 1;
+            if (panelflag == panelType.DAYPANEL) {
+                String dateText = lblMonth.getText();
+                String[] dateParts = dateText.split("\\.");
+                refreshDay(Integer.parseInt(dateParts[0]),
+                           Integer.parseInt(dateParts[1]),
+                           Integer.parseInt(dateParts[2]),
+                           direction.NEXT);               
             }
-            else{ //Foward one month
-                currentMonth += 1;
+            
+            else {
+                if (currentMonth == 11){ //Foward one year
+                    currentMonth = 0;
+                    currentYear += 1;
+                }
+                else{ //Foward one month
+                    currentMonth += 1;
+                }
+                refreshCalendar(currentMonth, currentYear);
             }
-            calendarPanel.setVisible(false);          
-            refreshCalendar(currentMonth, currentYear);
-            calendarPanel.setVisible(true);
         }
     }
+    
+     
+    
     class cmbYear_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (cmbYear.getSelectedItem() != null){
@@ -377,35 +475,39 @@ public class CalendarTable extends JPanel {
                 currentYear = Integer.parseInt(b);
                 //calendarPanel.setVisible(false);
                 refreshCalendar(currentMonth, currentYear);
-                //calendarPanel.setVisible(true);
             }
         }
     }
     class selectedDay_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
-//            calendarPanel.setVisible(false);
-//            p = new JPanel();
-//            p.setSize(300, 300);
-//            p.setLocation(200, 200);
-//            p.setBackground(Color.red);
-//            p.setVisible(true);
-//            calendarPanel.setVisible(true);
-//            calendarPanel.setBackground(Color.BLACK);
-//            currentMonth = currentMonth - 1;
-//            refreshCalendar(currentMonth, currentYear);
-            //calendarPanel.setVisible(false);
-            JPanel panel = test();
+            JPanel panel = dayPanel();
             PaintMainFrame.changeCentralPanel(panel);
+            JButton btn = (JButton)e.getSource();
+            lblMonth.setText(btn.getText() +"." + (currentMonth + 1) + "." + currentYear);
+            panelflag = panelType.DAYPANEL;
+            currentDay = Integer.parseInt(btn.getText());
         }
     }
-    private JPanel test() {
-        refreshCalendar(currentMonth, currentYear);
+    
+    class selectedMonth_Action implements ActionListener{        
+        public void actionPerformed(ActionEvent e) {         
+            PaintMainFrame.changeCentralPanel(calendarPanel);
+            JButton btn = (JButton)e.getSource();
+            lblMonth.setText("" + currentMonth);
+            panelflag = panelType.MONTHPANEL;
+            currentDay = Integer.parseInt(btn.getText());
+        }
+    }
+    
+    private JPanel dayPanel() {
         calendarPanel.setVisible(false);
-        p = new JPanel();
-        p.setSize(300, 300);
-        p.setLocation(200, 200);
-        p.setBackground(Color.red);
-        p.setVisible(true);  
-        return p;
+        changeYearPanel.setVisible(false);
+        pane = new JPanel();
+        JPanel paneRight = new JPanel();
+        JPanel paneLeft = new JPanel();
+        sizeCentralPanel(pane);
+        pane.setBackground(Color.red);
+        pane.setVisible(true); 
+        return pane;
     }
 }

@@ -315,12 +315,10 @@ public class CalendarApplication {
     //get rezolution of the screen
     public static Dimension getRezolution(){        
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println(size);
         return (size);        
     }
     //get needed size of frame
     public static int frameHeight(Dimension exSize){
-        System.out.println(exSize.height*2/3);
         return(exSize.height*2/3);
     }
     //set icon on the frame and application's icon
