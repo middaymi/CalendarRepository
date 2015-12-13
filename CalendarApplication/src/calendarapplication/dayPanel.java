@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -41,12 +42,13 @@ public class dayPanel {
         String[] eventsText = dumper.findEventsByDate(date);
         pane = new JPanel();
         paneInScroll = new JPanel();
-        JScrollPane scrlPane = new JScrollPane(paneInScroll);
         paneRight = new JPanel();
         textArea = new JTextArea(5, 10);
         JButton del = new JButton("DEL");
         JButton ok = new JButton("SAVE");
         JButton create = new JButton("CREATE");
+        JScrollPane scrlPane = new JScrollPane(paneInScroll);
+        JScrollPane scrollPaneTextArea = new JScrollPane(textArea);
         
         create.addActionListener(new createEventButton_Action());
         del.addActionListener(new deleteEventButton_Action());
@@ -54,25 +56,27 @@ public class dayPanel {
         
         size.sizeLocationCentralPanel(pane);
         paneInScroll.setSize(435, 600);
+        scrollPaneTextArea.setSize(450, 250);
         paneRight.setSize(600, pane.getWidth());
         textArea.setSize(450, 250);
         del.setSize(100, 50);
         ok.setSize(100, 50);
         create.setSize(100, 50);
-        scrlPane.setSize(450, pane.getWidth());      
+        scrlPane.setSize(450, 600);      
         
         scrlPane.setLocation(0, 0);
         paneInScroll.setLocation(0,0);
+        scrollPaneTextArea.setLocation(75, 50);
         paneRight.setLocation(450, 0);
-        textArea.setLocation(75, 50);
-        del.setLocation(175, 550);
-        create.setLocation(200, 550);
-        ok.setLocation(325, 550); 
+        textArea.setLocation(0, 0);
+        del.setLocation(75, 550);
+        create.setLocation(250, 550);
+        ok.setLocation(425, 550); 
         
         pane.setLayout(null);
         paneInScroll.setLayout(new GridBagLayout());
         sp = new GridBagConstraints();
-        paneRight.setLayout(null);
+        paneRight.setLayout(null);       
         
         //pane.setBackground(Color.red);
         pane.setOpaque(false);
@@ -89,6 +93,9 @@ public class dayPanel {
         scrlPane.setWheelScrollingEnabled(true);
         scrlPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
+        scrollPaneTextArea.setWheelScrollingEnabled(true);
+        scrollPaneTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
         paneRight.setBackground(Color.LIGHT_GRAY);
         
         countOfEvents = eventsText.length;
@@ -99,17 +106,22 @@ public class dayPanel {
             sp.gridwidth = 1;
             sp.gridheight = 1;
             sp.weightx = sp.weighty = 1.0;
-            //sp.insets = new Insets(0, 0, 0, 0);
+            sp.insets = new Insets(5, 0, 5, 0);
             sp.fill = GridBagConstraints.BOTH;
 
             JButton btn = new JButton(eventsText[i]);
+            System.out.println(eventsText[i]);
             btn.addActionListener(new dayEventButton_Action());
             btn.setPreferredSize(new Dimension(430, 100));
             btn.setBackground(Color.WHITE);
+            btn.setBorderPainted(false);
+            btn.setFocusPainted(false);
+            //btn.setContentAreaFilled(false);
+            btn.setFont(new Font("Arial", Font.PLAIN, 30));
             paneInScroll.add(btn, sp);
-        }        
-      
-        paneRight.add(textArea);       
+        }
+        
+        paneRight.add(scrollPaneTextArea);       
         paneRight.add(del);
         paneRight.add(create);
         paneRight.add(ok);
@@ -167,6 +179,7 @@ public class dayPanel {
                 paneInScroll.remove(pressedButton);
                     countOfEvents--;
                     pressedButton = null;
+                    textArea.setText("");
                     paneInScroll.updateUI();
             }
         }
@@ -175,11 +188,15 @@ public class dayPanel {
     class modifyEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             String eventText = textArea.getText();
-            if ("".equals(eventText) && pressedButton != null) {
-                paneInScroll.remove(pressedButton);
-                return;
+            if (pressedButton != null) {
+                if ("".equals(eventText)) {
+                    paneInScroll.remove(pressedButton);
+                    return;
+                }
+                if (pressedButton.getText().equals(textArea.getText()))
+                    return;            
+                pressedButton.setText(eventText);
             }
-            pressedButton.setText(eventText);
         }
     }
 
