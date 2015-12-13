@@ -1,16 +1,14 @@
 package calendarapplication;
 
 import static calendarapplication.CalendarApplication.PaintMainFrame;
+import calendarapplication.Controller.Dumper;
 import java.awt.BorderLayout;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -30,7 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -44,13 +41,14 @@ public class CalendarTable extends JPanel {
 
     int realYear, realMonth, realDay, currentYear, currentMonth;
     int currentDay;
+    Dumper dumper;
     JLabel lblMonth, lblYear;
     JComboBox cmbYear;    
     JPanel changeYearPanel;
     JPanel nextPrevPanel;
     JPanel weekPanel;
     JPanel calendarPanel;
-    JPanel dayPanel;
+    dayPanel dayPanel;
     JPanel WeekPANEL;
     JPanel bottomPanel;
     JButton btnPrev, btnNext;
@@ -94,6 +92,8 @@ public class CalendarTable extends JPanel {
         makeWeekPANEL();
         panelflag = panelType.MONTHPANEL;
         isInit = false;
+        
+        dumper = new Controller.XMLDumper("db\\events.xml");
         
         imgNotVisible = iconNotVisible.getImage();                               
         imgBtnPrev = iconBtnPrev.getImage();
@@ -460,12 +460,15 @@ public class CalendarTable extends JPanel {
     class selectedDay_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton)e.getSource();
-            if (btn.getText() == " ")
+            String selectedDate = btn.getText() +"." + (currentMonth + 1) + "." + currentYear;
+            if (" ".equals(btn.getText()))
                 return;
-            if (dayPanel == null) 
-                dayPanel = makeDayPanel();
-            PaintMainFrame.changeCentralPanel(dayPanel, panelType.DAYPANEL);    
-            lblMonth.setText(btn.getText() +"." + (currentMonth + 1) + "." + currentYear);
+            if (dayPanel == null) {
+                dayPanel = new dayPanel(selectedDate, dumper);
+                dayPanel.setDumper(dumper);
+            }
+            PaintMainFrame.changeCentralPanel(dayPanel.pane, panelType.DAYPANEL);    
+            lblMonth.setText(selectedDate);
             panelflag = panelType.DAYPANEL;
             currentDay = Integer.parseInt(btn.getText());
         }
@@ -492,83 +495,6 @@ public class CalendarTable extends JPanel {
             panelflag = panelflag.WEEK;
         }
     }
-    
-    private JPanel makeDayPanel() {
-        String[] testStr = {"aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
-                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
-                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
-                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa","aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
-                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa"};
-        
-        pane = new JPanel();
-        JPanel paneInScroll = new JPanel();
-        JScrollPane scrlPane = new JScrollPane(paneInScroll);
-        JPanel paneRight = new JPanel();
-        JTextArea textArea = new JTextArea(5, 10);
-        JButton del = new JButton("DEL");
-        JButton ok = new JButton("OK");
-        
-        size.sizeLocationCentralPanel(pane);
-        paneInScroll.setSize(435, 600);
-        paneRight.setSize(600, pane.getWidth());
-        textArea.setSize(450, 250);
-        del.setSize(100, 50);
-        ok.setSize(100, 50);
-        scrlPane.setSize(450, pane.getWidth());      
-        
-        scrlPane.setLocation(0, 0);
-        paneInScroll.setLocation(0,0);
-        paneRight.setLocation(450, 0);
-        textArea.setLocation(75, 50);
-        del.setLocation(175, 550);
-        ok.setLocation(325, 550);      
-        
-        pane.setLayout(null);
-        paneInScroll.setLayout(new GridBagLayout());
-        GridBagConstraints sp = new GridBagConstraints();
-        paneRight.setLayout(null);
-        
-        //pane.setBackground(Color.red);
-        pane.setOpaque(false);
-        
-        del.setBackground(Color.WHITE);
-        ok.setBackground(Color.WHITE);
-        
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);       
-        textArea.setBorder(new TitledBorder(""));
-        textArea.setFont(new Font("Arial", Font.PLAIN, 50));
-        textArea.setBackground(Color.WHITE);       
-              
-        scrlPane.setWheelScrollingEnabled(true);        
-        scrlPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        
-        paneRight.setBackground(Color.LIGHT_GRAY);
-                      
-        for (int i = 0; i < testStr.length; ++i) {
-            sp.gridx = 0;
-            sp.gridy = i;
-            sp.gridwidth = 1;
-            sp.gridheight = 1;
-            sp.weightx = sp.weighty = 1.0;
-            //sp.insets = new Insets(0, 0, 0, 0);
-            sp.fill = GridBagConstraints.BOTH;
-            JButton btn = new JButton(testStr[i]);
-            btn.setPreferredSize(new Dimension(430, 100));
-            btn.setBackground(Color.WHITE);
-            paneInScroll.add(btn, sp);
-        }        
-      
-        paneRight.add(textArea);       
-        paneRight.add(del);
-        paneRight.add(ok);
-        
-        pane.add(scrlPane);
-        pane.add(paneRight);
-        
-        return pane;
-    }
-    
     
     private JPanel makeWeekPANEL() {
         String[] testStr = {"Лешка,", "люблю", "тебя", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",

@@ -193,7 +193,7 @@ public class CalendarApplication {
                 backgroundPanel.add(panel);
             }
             if (type == panelType.MONTHPANEL) {
-                backgroundPanel.remove(tb.dayPanel);
+                backgroundPanel.remove(tb.dayPanel.pane);
                 backgroundPanel.add(tb.changeYearPanel);
                 backgroundPanel.add(tb.weekPanel);
                 backgroundPanel.add(tb.calendarPanel);
