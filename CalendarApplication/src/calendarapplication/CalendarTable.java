@@ -1,15 +1,18 @@
 package calendarapplication;
 
 import static calendarapplication.CalendarApplication.PaintMainFrame;
+import java.awt.BorderLayout;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -25,9 +28,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 
-enum panelType {DAYPANEL, MONTHPANEL}
+enum panelType {DAYPANEL, MONTHPANEL, WEEK}
 enum direction {PREV, NEXT}
 
 public class CalendarTable extends JPanel {
@@ -41,6 +51,7 @@ public class CalendarTable extends JPanel {
     JPanel weekPanel;
     JPanel calendarPanel;
     JPanel dayPanel;
+    JPanel WeekPANEL;
     JPanel bottomPanel;
     JButton btnPrev, btnNext;
     JButton ButtonLeft;
@@ -55,8 +66,7 @@ public class CalendarTable extends JPanel {
     JButton[][] buttons;
     int rows = 6, collumns = 7;  
     JPanel pane;
-    boolean isInit;
-    
+    boolean isInit;    
     
     static panelType panelflag; 
     
@@ -81,6 +91,7 @@ public class CalendarTable extends JPanel {
         makeChangeYearPanel();
         makeNextPrevPanel();
         makeBottomPanel();
+        makeWeekPANEL();
         panelflag = panelType.MONTHPANEL;
         isInit = false;
         
@@ -223,7 +234,7 @@ public class CalendarTable extends JPanel {
                     buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER); 
                     buttons[i][j].addActionListener(new selectedDay_Action());
                 } else { //if not current day
-                    buttons[i][j].setBackground(Color.lightGray);
+                    buttons[i][j].setBackground(Color.LIGHT_GRAY);
                     //if not used
                     if ((j < som && i == 0) || (currentPosition > nod)) {
                         buttons[i][j].setText(" ");
@@ -299,13 +310,8 @@ public class CalendarTable extends JPanel {
     
     private void makeCalendarPanel(){
         calendarPanel = new JPanel();
-//        calendarPanel.setSize(53*frameHeight(getRezolution())/60,
-//                              13*frameHeight(getRezolution())/24);
-//        calendarPanel.setLocation((int)((frameHeight(getRezolution()) 
-//                                         - calendarPanel.getSize().width)/2), 
-//                                  (int) (frameHeight(getRezolution())*37/120));
+        
         size.sizeLocationCentralPanel(calendarPanel);
-        //calendarPanel.setBackground(Color.red);
         calendarPanel.setOpaque(false);
         calendarPanel.setLayout(new GridBagLayout());
         buttons = new JButton[rows][collumns];
@@ -313,8 +319,8 @@ public class CalendarTable extends JPanel {
         for(int i = 0; i < rows; i++) {
             for (int j = 0; j < collumns; j++) {
                 buttons[i][j] = new JButton();
-                buttons[i][j].setBorderPainted(false);
-                buttons[i][j].setFocusPainted(false);
+//                buttons[i][j].setBorderPainted(false);
+//                buttons[i][j].setFocusPainted(false);
 //                buttons[i][j].setContentAreaFilled(false);
             }
         }
@@ -453,9 +459,12 @@ public class CalendarTable extends JPanel {
     }
     class selectedDay_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
-            dayPanel = makeDayPanel();
-            PaintMainFrame.changeCentralPanel(dayPanel, panelType.DAYPANEL);
             JButton btn = (JButton)e.getSource();
+            if (btn.getText() == " ")
+                return;
+            if (dayPanel == null) 
+                dayPanel = makeDayPanel();
+            PaintMainFrame.changeCentralPanel(dayPanel, panelType.DAYPANEL);    
             lblMonth.setText(btn.getText() +"." + (currentMonth + 1) + "." + currentYear);
             panelflag = panelType.DAYPANEL;
             currentDay = Integer.parseInt(btn.getText());
@@ -472,17 +481,150 @@ public class CalendarTable extends JPanel {
         }
     }
     
+    class selectedWeek_Action implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            
+            if (WeekPANEL == null) 
+                WeekPANEL = makeWeekPANEL();
+            if (panelflag == panelType.WEEK)
+                return;
+            PaintMainFrame.changeCentralPanel(WeekPANEL, panelType.WEEK);
+            panelflag = panelflag.WEEK;
+        }
+    }
+    
     private JPanel makeDayPanel() {
+        String[] testStr = {"aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa","aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa"};
+        
         pane = new JPanel();
+        JPanel paneInScroll = new JPanel();
+        JScrollPane scrlPane = new JScrollPane(paneInScroll);
         JPanel paneRight = new JPanel();
-        JPanel paneLeft = new JPanel();
+        JTextArea textArea = new JTextArea(5, 10);
+        JButton del = new JButton("DEL");
+        JButton ok = new JButton("OK");
+        
         size.sizeLocationCentralPanel(pane);
-        pane.setOpaque(false);
+        paneInScroll.setSize(435, 600);
+        paneRight.setSize(600, pane.getWidth());
+        textArea.setSize(450, 250);
+        del.setSize(100, 50);
+        ok.setSize(100, 50);
+        scrlPane.setSize(450, pane.getWidth());      
+        
+        scrlPane.setLocation(0, 0);
+        paneInScroll.setLocation(0,0);
+        paneRight.setLocation(450, 0);
+        textArea.setLocation(75, 50);
+        del.setLocation(175, 550);
+        ok.setLocation(325, 550);      
+        
+        pane.setLayout(null);
+        paneInScroll.setLayout(new GridBagLayout());
+        GridBagConstraints sp = new GridBagConstraints();
+        paneRight.setLayout(null);
+        
         //pane.setBackground(Color.red);
-        pane.setVisible(true); 
+        pane.setOpaque(false);
+        
+        del.setBackground(Color.WHITE);
+        ok.setBackground(Color.WHITE);
+        
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);       
+        textArea.setBorder(new TitledBorder(""));
+        textArea.setFont(new Font("Arial", Font.PLAIN, 50));
+        textArea.setBackground(Color.WHITE);       
+              
+        scrlPane.setWheelScrollingEnabled(true);        
+        scrlPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+        paneRight.setBackground(Color.LIGHT_GRAY);
+                      
+        for (int i = 0; i < testStr.length; ++i) {
+            sp.gridx = 0;
+            sp.gridy = i;
+            sp.gridwidth = 1;
+            sp.gridheight = 1;
+            sp.weightx = sp.weighty = 1.0;
+            //sp.insets = new Insets(0, 0, 0, 0);
+            sp.fill = GridBagConstraints.BOTH;
+            JButton btn = new JButton(testStr[i]);
+            btn.setPreferredSize(new Dimension(430, 100));
+            btn.setBackground(Color.WHITE);
+            paneInScroll.add(btn, sp);
+        }        
+      
+        paneRight.add(textArea);       
+        paneRight.add(del);
+        paneRight.add(ok);
+        
+        pane.add(scrlPane);
+        pane.add(paneRight);
+        
         return pane;
     }
     
+    
+    private JPanel makeWeekPANEL() {
+        String[] testStr = {"Лешка,", "люблю", "тебя", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa","aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa",
+                                "aaaaaaaaaaaaa", "aaaaaaaaaaaaa", "aaaaaaaaaaaaa"};
+        pane = new JPanel();
+        JPanel paneInScroll = new JPanel();
+        JScrollPane scrlPane = new JScrollPane(paneInScroll);
+               
+        size.sizeLocationCentralPanel(pane);
+        paneInScroll.setSize(450, pane.getHeight());
+        scrlPane.setSize(450, pane.getWidth());      
+        
+        scrlPane.setLocation(0, 0);
+        paneInScroll.setLocation(0,0);    
+        
+        pane.setLayout(null);
+        paneInScroll.setLayout(new GridBagLayout());
+        GridBagConstraints sp = new GridBagConstraints();      
+        
+        //pane.setBackground(Color.red);
+        pane.setOpaque(false);
+                   
+        scrlPane.setWheelScrollingEnabled(true);        
+        scrlPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                      
+        for (int i = 0; i < testStr.length; ++i) {
+            sp.gridx = 0;
+            sp.gridy = i;
+            sp.gridwidth = 1;
+            sp.gridheight = 1;
+            sp.weightx = sp.weighty = 1.0;
+            //sp.insets = new Insets(0, 0, 0, 0);
+            sp.fill = GridBagConstraints.BOTH;
+            JButton btn = new JButton(testStr[i]);
+            btn.setPreferredSize(new Dimension(430, 100));
+            btn.setBackground(Color.WHITE);
+            paneInScroll.add(btn, sp);
+        }        
+        for (int i = 0; i < 7; ++i) {
+            scrlPane.setLocation(i*pane.getWidth()/7, 0);
+            pane.add(scrlPane);
+        }   
+        
+        return pane;
+    }
+    // метод создает панель с рамкой и надписью
+    private JPanel createPanel(Border b, String text) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel(text));
+        panel.setSize(100, 100);
+        panel.setBorder(new CompoundBorder(b, new EmptyBorder(-50, -50, -50, -50)));
+        return panel;
+        }
     private JPanel makeBottomPanel() {
         bottomPanel = new JPanel();
         ImageIcon iconWeek = new ImageIcon("images\\WEEK_1.png");;
@@ -511,6 +653,7 @@ public class CalendarTable extends JPanel {
             GridBagConstraints bp = new GridBagConstraints(); 
             
             buttonWeek = new JButton();
+            buttonWeek.addActionListener(new selectedWeek_Action());
             buttonWeek.setText("  WEEK");
             buttonWeek.setFont(new Font("Arial", Font.PLAIN, size.frameHeight(size.getRezolution())/60));
             buttonWeek.setHorizontalTextPosition(AbstractButton.CENTER);

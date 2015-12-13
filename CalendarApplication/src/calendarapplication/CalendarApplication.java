@@ -1,18 +1,14 @@
 package calendarapplication;
 
 
-import calendarapplication.Sizes;
-import calendarapplication.panelType;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,14 +17,12 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
@@ -69,13 +63,10 @@ public class CalendarApplication {
     //create main frame
     public static class PaintMainFrame extends JFrame  {
             
-            static JPanel turnClosePanel;
-            
+            static JPanel turnClosePanel;           
             
             static CalendarTable tb = new CalendarTable();
-            static ImagePanel backgroundPanel = null;
-            
-          
+            static ImagePanel backgroundPanel = null;        
             
             ImageIcon iconTurn = new ImageIcon("images\\turn2.png");
             ImageIcon iconClose = new ImageIcon("images\\close2.png");
@@ -199,17 +190,20 @@ public class CalendarApplication {
                 backgroundPanel.remove(tb.changeYearPanel);
                 backgroundPanel.remove(tb.weekPanel);
                 backgroundPanel.remove(tb.calendarPanel);
-                backgroundPanel.remove(tb.bottomPanel);
                 backgroundPanel.add(panel);
-                backgroundPanel.add(tb.bottomPanel);
             }
             if (type == panelType.MONTHPANEL) {
                 backgroundPanel.remove(tb.dayPanel);
-                backgroundPanel.remove(tb.bottomPanel);
                 backgroundPanel.add(tb.changeYearPanel);
                 backgroundPanel.add(tb.weekPanel);
                 backgroundPanel.add(tb.calendarPanel);
-                backgroundPanel.add(tb.bottomPanel);
+            }
+            if (type == panelType.WEEK) {
+                backgroundPanel.remove(tb.calendarPanel);
+                backgroundPanel.remove(tb.changeYearPanel);
+//                backgroundPanel.remove(tb.dayPanel);
+                backgroundPanel.remove(tb.weekPanel);
+                backgroundPanel.add(tb.WeekPANEL);
             }
         }
     }
