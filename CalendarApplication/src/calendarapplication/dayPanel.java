@@ -13,6 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,7 +39,7 @@ public class dayPanel {
     dayPanel(String date, Dumper dumper) {
         currentDate = date;
         countOfEvents = 0;
-        String[] eventsText = dumper.findEventsByDate(date);
+        ArrayList<String> eventsText = dumper.findEventsByDate(date);
         pane = new JPanel();
         paneInScroll = new JPanel();
         JScrollPane scrlPane = new JScrollPane(paneInScroll);
@@ -91,9 +92,9 @@ public class dayPanel {
         
         paneRight.setBackground(Color.LIGHT_GRAY);
         
-        countOfEvents = eventsText.length;
+        countOfEvents = eventsText.size();
         
-        for (int i = 0; i < eventsText.length; ++i) {
+        for (int i = 0; i < eventsText.size(); ++i) {
             sp.gridx = 0;
             sp.gridy = i;
             sp.gridwidth = 1;
@@ -102,7 +103,7 @@ public class dayPanel {
             //sp.insets = new Insets(0, 0, 0, 0);
             sp.fill = GridBagConstraints.BOTH;
 
-            JButton btn = new JButton(eventsText[i]);
+            JButton btn = new JButton(eventsText.get(i));
             btn.addActionListener(new dayEventButton_Action());
             btn.setPreferredSize(new Dimension(430, 100));
             btn.setBackground(Color.WHITE);

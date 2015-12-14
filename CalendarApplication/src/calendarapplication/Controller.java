@@ -22,6 +22,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Controller {
@@ -57,7 +59,7 @@ public class Controller {
     // Working with database of events (XML-file, DB etc.)
     interface Dumper {
         void saveEvent(String date, String text);
-        String[] findEventsByDate(String date);
+        ArrayList<String> findEventsByDate(String date);
     }
     
     // We work with XML-files
@@ -89,61 +91,74 @@ public class Controller {
         }
         
         private void createDB(String path){       
+            transferChanges(xmlFile);
+        }
+        
+        private void transferChanges(File f) {
             try {
-                // write the content into xml file
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new File(path));          
+                StreamResult result = new StreamResult(f);
                 transformer.transform(source, result);
             } catch (TransformerConfigurationException ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TransformerException ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
 
         @Override
         public void saveEvent(String date, String text) {
 
-            try {
-                // root element
-                Element dateElement = null;
-                doc = dBuilder.parse(xmlFile);
-                doc.getDocumentElement().normalize();
-                String event = doc.getDocumentElement().getElementsByTagName("d" + date).item(0).getTextContent();
-                if (event == null) {
-                    doc = dBuilder.newDocument();
-                    dateElement = doc.createElement("d"+date);
-                }
-                doc.appendChild(dateElement);
-                dateElement.appendChild(doc.createTextNode(text));
-
+            /*NodeList root = doc.getDocumentElement().getElementsByTagName("root");
+            if (root == null) {
+                Element rootElem = doc.getDocumentElement();
+                rootElem.appendChild(doc.createElement("root"));
                 // write the content into xml file
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 DOMSource source = new DOMSource(doc);
                 StreamResult result = new StreamResult(xmlFile);
-                
                 transformer.transform(source, result);
-            } catch (TransformerConfigurationException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (TransformerException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SAXException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+
+            Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
+            if (node == null) {
+                Element rootElem = doc.getDocumentElement();
+                Element dateElem = doc.createElement("d" + date);
+                Element eventElem = doc.createElement("event");
+                eventElem.appendChild(doc.createTextNode(text));
+                dateElem.appendChild(eventElem);
+                rootElem.appendChild(dateElem);
+            } else {
+                Element dateElement = null;
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                    dateElement = (Element) node;
+                Element eventElem = doc.createElement("event");
+                eventElem.appendChild(doc.createTextNode(text));
+                dateElement.appendChild(eventElem);
             }
+
+            transferChanges(xmlFile);
         }
 
         @Override
-        public String[] findEventsByDate(String date) {
-            String[] events = {"123", "456", "789", "101", "211",
-                               "123", "456", "789", "101", "211",
-                               "123", "456", "789", "101", "211"};
-            return events;
+        public ArrayList<String> findEventsByDate(String date) {
+            ArrayList<String> eventsArray = new ArrayList<>();
+            Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
+            if (node == null) {
+                return null;
+            } else {
+                Element dateElement = null;
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                    dateElement = (Element) node;
+                NodeList eventsElements = dateElement.getElementsByTagName("event");
+                for (int i = 0; eventsElements.item(i) != null; ++i)
+                    eventsArray.add(eventsElements.item(i).getTextContent());
+            }
+            
+            return eventsArray;
         }
     }
 
