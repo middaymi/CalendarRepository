@@ -59,6 +59,8 @@ public class Controller {
     // Working with database of events (XML-file, DB etc.)
     interface Dumper {
         void saveEvent(String date, String text);
+        void removeEvent(String date, String text);
+        void modifyEvent(String date, String oldText, String newText);
         ArrayList<String> findEventsByDate(String date);
     }
     
@@ -148,7 +150,7 @@ public class Controller {
             ArrayList<String> eventsArray = new ArrayList<>();
             Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
             if (node == null) {
-                return null;
+                return eventsArray;
             } else {
                 Element dateElement = null;
                 if (node.getNodeType() == Node.ELEMENT_NODE)
@@ -159,6 +161,40 @@ public class Controller {
             }
             
             return eventsArray;
+        }
+
+        @Override
+        public void removeEvent(String date, String text) {
+            Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
+            if (node != null) {
+                Element dateElement = null;
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                    dateElement = (Element) node;
+                NodeList eventNodes = dateElement.getChildNodes();
+                for (int i = 0; eventNodes.item(i) != null; ++i)
+                    if (eventNodes.item(i).getTextContent().equals(text)) {
+                        dateElement.removeChild(eventNodes.item(i));
+                    }
+            }
+            transferChanges(xmlFile);
+        }
+
+        @Override
+        public void modifyEvent(String date, String oldText, String newText) {
+            Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
+            if (node != null) {
+                Element dateElement = null;
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                    dateElement = (Element) node;
+                NodeList eventNodes = dateElement.getChildNodes();
+                for (int i = 0; eventNodes.item(i) != null; ++i)
+                    if (eventNodes.item(i).getTextContent().equals(oldText)) {
+                        Element eventElem = doc.createElement("event");
+                        eventElem.appendChild(doc.createTextNode(newText));
+                        dateElement.replaceChild(eventNodes.item(i), eventElem);
+                    }
+            }
+            transferChanges(xmlFile);
         }
     }
 

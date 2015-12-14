@@ -165,10 +165,11 @@ public class dayPanel {
     class deleteEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             if (pressedButton != null) {
+                dumper.removeEvent(currentDate, pressedButton.getText());
                 paneInScroll.remove(pressedButton);
-                    countOfEvents--;
-                    pressedButton = null;
-                    paneInScroll.updateUI();
+                countOfEvents--;
+                pressedButton = null;
+                paneInScroll.updateUI();
             }
         }
     }
@@ -180,6 +181,7 @@ public class dayPanel {
                 paneInScroll.remove(pressedButton);
                 return;
             }
+            dumper.modifyEvent(currentDate, pressedButton.getText(), eventText);
             pressedButton.setText(eventText);
         }
     }
