@@ -139,6 +139,13 @@ public class dayPanel {
     class createEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             String eventText = textArea.getText();
+            
+            ArrayList<String> eventsByDate = dumper.findEventsByDate(currentDate);
+            for (String i : eventsByDate) {
+                if (i.equals(eventText))
+                    return;
+            }
+
             if ("".equals(eventText))
                 return;
             JButton btn = new JButton(eventText);
@@ -177,12 +184,15 @@ public class dayPanel {
     class modifyEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             String eventText = textArea.getText();
-            if ("".equals(eventText) && pressedButton != null) {
-                paneInScroll.remove(pressedButton);
-                return;
+            if (pressedButton != null) {
+                if ("".equals(eventText)) {
+                    dumper.removeEvent(currentDate, pressedButton.getText());
+                    paneInScroll.remove(pressedButton);
+                    return;
+                }
+                dumper.modifyEvent(currentDate, pressedButton.getText(), eventText);
+                pressedButton.setText(eventText);
             }
-            dumper.modifyEvent(currentDate, pressedButton.getText(), eventText);
-            pressedButton.setText(eventText);
         }
     }
 

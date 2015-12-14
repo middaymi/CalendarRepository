@@ -112,19 +112,6 @@ public class Controller {
 
         @Override
         public void saveEvent(String date, String text) {
-
-            /*NodeList root = doc.getDocumentElement().getElementsByTagName("root");
-            if (root == null) {
-                Element rootElem = doc.getDocumentElement();
-                rootElem.appendChild(doc.createElement("root"));
-                // write the content into xml file
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(xmlFile);
-                transformer.transform(source, result);
-            }*/
-
             Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
             if (node == null) {
                 Element rootElem = doc.getDocumentElement();
@@ -137,6 +124,10 @@ public class Controller {
                 Element dateElement = null;
                 if (node.getNodeType() == Node.ELEMENT_NODE)
                     dateElement = (Element) node;
+                NodeList eventsElements = dateElement.getElementsByTagName("event");
+                for (int i = 0; eventsElements.item(i) != null; ++i)
+                    if (eventsElements.item(i).getTextContent().equals(text))
+                        return;
                 Element eventElem = doc.createElement("event");
                 eventElem.appendChild(doc.createTextNode(text));
                 dateElement.appendChild(eventElem);
@@ -170,10 +161,10 @@ public class Controller {
                 Element dateElement = null;
                 if (node.getNodeType() == Node.ELEMENT_NODE)
                     dateElement = (Element) node;
-                NodeList eventNodes = dateElement.getChildNodes();
-                for (int i = 0; eventNodes.item(i) != null; ++i)
-                    if (eventNodes.item(i).getTextContent().equals(text)) {
-                        dateElement.removeChild(eventNodes.item(i));
+                NodeList eventsElements = dateElement.getElementsByTagName("event");
+                for (int i = 0; eventsElements.item(i) != null; ++i)
+                    if (eventsElements.item(i).getTextContent().equals(text)) {
+                        dateElement.removeChild(eventsElements.item(i));
                     }
             }
             transferChanges(xmlFile);
@@ -188,10 +179,14 @@ public class Controller {
                     dateElement = (Element) node;
                 NodeList eventNodes = dateElement.getChildNodes();
                 for (int i = 0; eventNodes.item(i) != null; ++i)
+                    if (eventNodes.item(i).getTextContent().equals(newText)) {
+                        return;
+                    }
+                for (int i = 0; eventNodes.item(i) != null; ++i)
                     if (eventNodes.item(i).getTextContent().equals(oldText)) {
                         Element eventElem = doc.createElement("event");
                         eventElem.appendChild(doc.createTextNode(newText));
-                        dateElement.replaceChild(eventNodes.item(i), eventElem);
+                        dateElement.replaceChild(eventElem, eventNodes.item(i));
                     }
             }
             transferChanges(xmlFile);
