@@ -4,8 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/CalendarTable.java</file>
-            <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/MoveMouseListener.java</file>
+            <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/dayPanel.java</file>
             <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/CalendarApplication.java</file>
+            <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/Sizes.java</file>
+            <file>file:/C:/repo/CalendarRepository/CalendarApplication/src/calendarapplication/Controller.java</file>
         </group>
     </open-files>
 </project-private>

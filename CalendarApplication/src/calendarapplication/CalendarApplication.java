@@ -168,7 +168,7 @@ public class CalendarApplication {
             backgroundPanel.add(tb.changeYearPanel);
             //******************END ChangeYearPanel*****************************           
             
-            backgroundPanel.add(tb.weekPanel);
+            backgroundPanel.add(tb.topWeekPanel);
             
             //************START calendarPanel***********************************
             backgroundPanel.add(tb.calendarPanel);
@@ -188,23 +188,23 @@ public class CalendarApplication {
         public static void changeCentralPanel(JPanel panel, panelType type) {
             if (type == panelType.DAYPANEL) {
                 backgroundPanel.remove(tb.changeYearPanel);
-                backgroundPanel.add(tb.weekPanel);
+                backgroundPanel.add(tb.topWeekPanel);
                 backgroundPanel.remove(tb.calendarPanel);
                 backgroundPanel.add(panel);
-                backgroundPanel.add(tb.weekDaysPanel);
+                backgroundPanel.add(tb.topWeekDaysPanel);
             }
             if (type == panelType.MONTHPANEL) {
                 backgroundPanel.remove(tb.dayPanel.pane);
-                backgroundPanel.remove(tb.weekDaysPanel);
+                backgroundPanel.remove(tb.topWeekDaysPanel);
                 backgroundPanel.add(tb.changeYearPanel);
-                backgroundPanel.add(tb.weekPanel);
+                backgroundPanel.add(tb.topWeekPanel);
                 backgroundPanel.add(tb.calendarPanel);
             }
             if (type == panelType.WEEK) {
                 backgroundPanel.remove(tb.calendarPanel);
                 backgroundPanel.remove(tb.changeYearPanel);
 //                backgroundPanel.remove(tb.dayPanel);
-                backgroundPanel.remove(tb.weekPanel);
+                backgroundPanel.remove(tb.topWeekPanel);
                 backgroundPanel.add(tb.WeekPANEL);
             }
         }

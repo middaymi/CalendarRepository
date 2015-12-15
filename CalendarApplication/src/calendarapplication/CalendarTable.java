@@ -2,7 +2,6 @@ package calendarapplication;
 
 import static calendarapplication.CalendarApplication.PaintMainFrame;
 import calendarapplication.Controller.Dumper;
-import java.awt.BorderLayout;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,11 +26,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
 
 enum panelType {DAYPANEL, MONTHPANEL, WEEK}
@@ -46,8 +40,8 @@ public class CalendarTable extends JPanel {
     JComboBox cmbYear;    
     JPanel changeYearPanel;
     JPanel nextPrevPanel;
-    JPanel weekPanel;
-    JPanel weekDaysPanel;
+    JPanel topWeekPanel;
+    JPanel topWeekDaysPanel;
     JPanel calendarPanel;
     dayPanel dayPanel;
     JPanel WeekPANEL;
@@ -66,7 +60,8 @@ public class CalendarTable extends JPanel {
     JButton[][] buttons;
     int rows = 6, collumns = 7;  
     JPanel pane;
-    boolean isInit;    
+    boolean isInit; 
+    String selectedNumber;
     
     static panelType panelflag; 
     
@@ -76,9 +71,10 @@ public class CalendarTable extends JPanel {
     ImageIcon iconBtnPrev = new ImageIcon("images\\Left.png");
     ImageIcon iconBtnNext = new ImageIcon("images\\Right.png");   
     
-    String[] headers = {"Mon", "Tue", "Wed ", "Thu   ", "Fri  ", "Sat", "Sun"}; 
+    String[] headers = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}; 
     String[] months =  {"January", "February", "March", "April", "May", "June", 
                         "July", "August", "September", "October", "November", "December"};
+    JButton[] dateInWeek;
     
     int currentPosition = 0;
     Sizes size;
@@ -190,7 +186,6 @@ public class CalendarTable extends JPanel {
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box   
         
         //Clear table
-        calendarPanel.setVisible(false);
         for (int m = 0; m < rows; m++){
             for (int n = 0; n < collumns; n++){
                 buttons[m][n].setText("");
@@ -257,77 +252,58 @@ public class CalendarTable extends JPanel {
         }
         isInit = true;
         calendarPanel.setVisible(true);
+        
     }    
-    
-    JPanel getYearPanel() {
-        return changeYearPanel;
-    }
-    
-    JPanel nextPrevPanel() {
-        return nextPrevPanel;
-    }
-      
-    JPanel calendarPanel() {
-        return calendarPanel;
-    }
-    
-    JPanel weekPanel() {
-        return weekPanel;
-    }
 
     private JPanel makeWeekPanel(){
-        weekPanel = new JPanel();
-        weekPanel.setOpaque(false);
-        weekPanel.setBackground(Color.red);
-        weekPanel.setSize((int)(size.frameHeight(size.getRezolution())*53/60),
+        topWeekPanel = new JPanel();
+        topWeekPanel.setOpaque(false);
+        //topWeekPanel.setBackground(Color.red);
+        topWeekPanel.setSize((int)(size.frameHeight(size.getRezolution())*53/60),
                           (int)(size.frameHeight(size.getRezolution())/40));
-        weekPanel.setLocation((int)((size.frameHeight(size.getRezolution()) 
-                                    - weekPanel.getSize().width)/2), 
+        topWeekPanel.setLocation((int)((size.frameHeight(size.getRezolution()) 
+                                    - topWeekPanel.getSize().width)/2), 
                               (int) (size.frameHeight(size.getRezolution())*67/240));
-        weekPanel.setLayout(new GridBagLayout());
-        GridBagConstraints wp = new GridBagConstraints();
         
-        for (int j = 0; j < 7; j++) {
-            wp.gridx = j;
-            wp.gridy = 0;
-            wp.gridwidth = 1;
-            wp.gridheight = 1;
-            wp.weightx = wp.weighty = 1.0;
-            wp.insets = new Insets(0, 5, 0, 5);
-            wp.fill = GridBagConstraints.BOTH;
+        topWeekPanel.setLayout(null);
+        for (int i = 0; i < 7; ++i) {
             btn = new JButton();
+            size.sizeofButtonsOnWeekAnaWeekDayPanel(btn);
+            btn.setLocation(i*btn.getWidth() + 10, 0);
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
             btn.setContentAreaFilled(false);
-            btn.setText(headers[j]); 
+            btn.setText(headers[i]); 
             btn.setFont(new Font("Arial", Font.PLAIN, (int) (size.frameHeight(size.getRezolution())*0.015)));
             btn.setHorizontalTextPosition(AbstractButton.CENTER);
-            weekPanel.add(btn, wp);
+            topWeekPanel.add(btn);
+        }
+        return topWeekPanel;    
+    }
+    private void weekDaysPanel() {
+        topWeekDaysPanel = new JPanel();
+        topWeekDaysPanel.setOpaque(false); 
+        size.sizeLocationWeekDayPanel(topWeekDaysPanel);
+        
+        dateInWeek = new JButton[7];
+        for (int i = 0; i < 7; ++i) {
+            dateInWeek[i] = new JButton();
+            //145*30
+            size.sizeButtonsOnPaneRight(dateInWeek[i]);
         }        
-        return weekPanel;    
-    }
-    private JPanel weekDaysPanel() {
-        weekDaysPanel = new JPanel();
-        weekDaysPanel.setOpaque(false);     
-        
-        weekDaysPanel = new JPanel();
-        weekDaysPanel.setSize((int)(size.frameHeight(size.getRezolution())*53/60),
-                          (int)(size.frameHeight(size.getRezolution())/40));
-        weekDaysPanel.setLocation((int)((size.frameHeight(size.getRezolution()) 
-                                    - weekDaysPanel.getSize().width)/2), 
-                              (int) (size.frameHeight(size.getRezolution())*67/240) - 10);
-        
-        return weekDaysPanel;
-    }
-    
+    }   
     private void makeWeekDaysPanel(String date, JPanel pane) {
-        int seldDate = Integer.parseInt(date);
+        int seldDate = Integer.parseInt(date);      
         
-//        for (int i = 0; i < 7; ++i) {
-//            btnD.setText("");
-//        }
-        weekDaysPanel.setOpaque(false);
-        weekDaysPanel.setLayout(new GridBagLayout());
+        for (int i = 0; i < 7; ++i) {
+            dateInWeek[i].setText("");
+            dateInWeek[i].setForeground(Color.BLACK);
+        }
+        
+        //topWeekDaysPanel.setOpaque(true);
+        //topWeekDaysPanel.setBackground(Color.red);
+        topWeekDaysPanel.setLayout(null);
+        
                 
         int nod, som; //Number Of Days, Start Of Month
         //Get first day of month and number of days        
@@ -348,31 +324,29 @@ public class CalendarTable extends JPanel {
         int currentPositionOfDay = 0;
         currentPositionOfDay = 7 - (7*(seldDate/7 + 1) - seldDate) + som;
        
-        GridBagConstraints wcp = new GridBagConstraints();
-        for (int i = (seldDate - currentPositionOfDay + 1);
-                 i <= seldDate + (7 - currentPositionOfDay); 
-                 ++i) {
-            wcp.weightx = wcp.weighty = 1.0;
-            wcp.insets = new Insets(0, 5, 0, 5);
-            wcp.fill = GridBagConstraints.BOTH;
-            btnD = new JButton();
-            btnD.setBorderPainted(false);
-            btnD.setFocusPainted(false);
-            btnD.setContentAreaFilled(false);
-            btnD.setText("" + i); 
-            if (i == 0) btnD.setText(" ");
-            if (i > nod) btnD.setText(" ");
-            btnD.setFont(new Font("Arial", Font.PLAIN, (int) (size.frameHeight(size.getRezolution())*0.015)));
-            btnD.setHorizontalTextPosition(AbstractButton.CENTER);
-            pane.add(btnD, wcp);            
+        for (int i = (seldDate - currentPositionOfDay + 1), j = 0; 
+                 i <= (seldDate + (7 - currentPositionOfDay));
+                 ++i, ++j) {
+            size.sizeofButtonsOnWeekAnaWeekDayPanel(dateInWeek[j]);
+            dateInWeek[j].setBorderPainted(false);
+            dateInWeek[j].setFocusPainted(false);
+            dateInWeek[j].setContentAreaFilled(false);
+            dateInWeek[j].setLocation(dateInWeek[j].getWidth()*j + 10, 0);
+            dateInWeek[j].setText("" + i); 
+            if ((Integer.toString(i)).equals(selectedNumber)) dateInWeek[j].setForeground(Color.red);
+            if (i == 0) dateInWeek[j].setText(" ");
+            if (i > nod) dateInWeek[j].setText(" ");
+            dateInWeek[j].setFont(new Font("Arial", Font.PLAIN, (int) (size.frameHeight(size.getRezolution())*0.015)));
+            dateInWeek[j].setHorizontalTextPosition(AbstractButton.CENTER);   
+            pane.add(dateInWeek[j]); 
         }     
     }   
     
     private void makeCalendarPanel(){
         calendarPanel = new JPanel();
-        
-        size.sizeLocationCentralPanel(calendarPanel);
         calendarPanel.setOpaque(false);
+        //calendarPanel.setBackground(Color.red);
+        size.sizeLocationCentralPanel(calendarPanel);
         calendarPanel.setLayout(new GridBagLayout());
         buttons = new JButton[rows][collumns];
         GridBagConstraints cp = new GridBagConstraints();
@@ -389,7 +363,7 @@ public class CalendarTable extends JPanel {
     private JPanel makeNextPrevPanel(){
         nextPrevPanel = new JPanel();
         nextPrevPanel.setOpaque(false);
-        nextPrevPanel.setBackground(Color.ORANGE);
+        //nextPrevPanel.setBackground(Color.ORANGE);
         size.setSizeLocationNextPrevPanel(nextPrevPanel);
         nextPrevPanel.setLayout(new GridBagLayout());
         GridBagConstraints btn = new GridBagConstraints();         
@@ -500,7 +474,8 @@ public class CalendarTable extends JPanel {
             //sp.insets = new Insets(0, 0, 0, 0);
             sp.fill = GridBagConstraints.BOTH;
             JButton btn = new JButton(testStr[i]);
-            btn.setPreferredSize(new Dimension(430, 100));
+            //setPreferredSize 430*100
+            size.sizeButtonsInScrollPaneForEvents(btn);
             btn.setBackground(Color.WHITE);
             paneInScroll.add(btn, sp);
         }        
@@ -651,6 +626,7 @@ public class CalendarTable extends JPanel {
     class selectedDay_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton)e.getSource();
+            selectedNumber = btn.getText();
             String selectedDate = btn.getText() +"." + (currentMonth + 1) + "." + currentYear;
             if (" ".equals(btn.getText()))
                 return;
@@ -659,8 +635,8 @@ public class CalendarTable extends JPanel {
                 dayPanel.setDumper(dumper);
             }
             PaintMainFrame.changeCentralPanel(dayPanel.pane, panelType.DAYPANEL);
-            makeWeekDaysPanel(btn.getText(), weekDaysPanel);
-            weekPanel.setLocation(weekPanel.getLocation().x, (int) (size.frameHeight(size.getRezolution())*19/80));
+            makeWeekDaysPanel(btn.getText(), topWeekDaysPanel);
+            topWeekPanel.setLocation(topWeekPanel.getLocation().x, (int) (size.frameHeight(size.getRezolution())*19/80));
             lblMonth.setText(selectedDate);
             panelflag = panelType.DAYPANEL;
             currentDay = Integer.parseInt(btn.getText());
@@ -672,7 +648,7 @@ public class CalendarTable extends JPanel {
                 return;
             PaintMainFrame.changeCentralPanel(calendarPanel, panelType.MONTHPANEL);
             panelflag = panelType.MONTHPANEL;
-            weekPanel.setLocation(weekPanel.getLocation().x, (size.frameHeight(size.getRezolution())*67/240));
+            topWeekPanel.setLocation(topWeekPanel.getLocation().x, (size.frameHeight(size.getRezolution())*67/240));
             refreshCalendar(currentMonth, currentYear);
         }
     }    
@@ -728,4 +704,21 @@ public class CalendarTable extends JPanel {
             }
         }
     }
+        
+    JPanel getYearPanel() {
+        return changeYearPanel;
+    }
+    
+    JPanel nextPrevPanel() {
+        return nextPrevPanel;
+    }
+      
+    JPanel calendarPanel() {
+        return calendarPanel;
+    }
+    
+    JPanel weekPanel() {
+        return topWeekPanel;
+    }
+
 }

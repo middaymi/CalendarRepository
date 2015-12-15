@@ -1,35 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package calendarapplication;
 
 import calendarapplication.Controller.Dumper;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
-/**
- *
- * @author Светлана
- */
 public class dayPanel {
     Sizes size = new Sizes();
     JPanel pane;
     JPanel paneInScroll;
     JPanel paneRight;
-    JTextArea textArea;
+    JTextArea textAreaInScroll;
     JButton pressedButton;
     GridBagConstraints sp;
     int countOfEvents;
@@ -39,68 +29,66 @@ public class dayPanel {
     dayPanel(String date, Dumper dumper) {
         currentDate = date;
         countOfEvents = 0;
-        String[] eventsText = dumper.findEventsByDate(date);
+        ArrayList<String> eventsText = dumper.findEventsByDate(date);
         pane = new JPanel();
         paneInScroll = new JPanel();
         paneRight = new JPanel();
-        textArea = new JTextArea(5, 10);
+        textAreaInScroll = new JTextArea(5, 10);
         JButton del = new JButton("DEL");
         JButton ok = new JButton("SAVE");
         JButton create = new JButton("CREATE");
         JScrollPane scrlPane = new JScrollPane(paneInScroll);
-        JScrollPane scrollPaneTextArea = new JScrollPane(textArea);
+        JScrollPane scrollPaneTextArea = new JScrollPane(textAreaInScroll);
         
         create.addActionListener(new createEventButton_Action());
         del.addActionListener(new deleteEventButton_Action());
         ok.addActionListener(new modifyEventButton_Action());
         
         size.sizeLocationCentralPanel(pane);
-        paneInScroll.setSize(435, 600);
-        scrollPaneTextArea.setSize(450, 250);
-        paneRight.setSize(600, pane.getWidth());
-        textArea.setSize(450, 250);
-        del.setSize(100, 50);
-        ok.setSize(100, 50);
-        create.setSize(100, 50);
-        scrlPane.setSize(450, 600);      
-        
-        scrlPane.setLocation(0, 0);
-        paneInScroll.setLocation(0,0);
-        scrollPaneTextArea.setLocation(75, 50);
-        paneRight.setLocation(450, 0);
-        textArea.setLocation(0, 0);
-        del.setLocation(75, 550);
-        create.setLocation(250, 550);
-        ok.setLocation(425, 550); 
+        size.sizeLocationPaneInScroll(paneInScroll);
+        size.sizeLocationScrollPaneTextArea(scrollPaneTextArea);
+        size.sizeLocationPaneRight(paneRight);
+        size.sizeLocationScrlPane(scrlPane);
+        size.sizeLocationButtonOnPaneRight(del, 1);
+        size.sizeLocationButtonOnPaneRight(create, 2);
+        size.sizeLocationButtonOnPaneRight(ok, 3);
+        size.sizeLocationTextAreaInScroll(textAreaInScroll);      
         
         pane.setLayout(null);
         paneInScroll.setLayout(new GridBagLayout());
         sp = new GridBagConstraints();
         paneRight.setLayout(null);       
         
-        //pane.setBackground(Color.red);
         pane.setOpaque(false);
+        paneInScroll.setOpaque(false);
+        scrlPane.setOpaque(false);
+        scrollPaneTextArea.setOpaque(false);
+        
+        //pane.setBackground(Color.orange);
+        //paneInScroll.setBackground(Color.orange);
+        //scrlPane.setBackground(Color.orange);
+        //scrollPaneTextArea.setBackground(Color.orange);
+        //paneRight.setBackground(Color.LIGHT_GRAY);
         
         del.setBackground(Color.WHITE);
+        create.setBackground(Color.WHITE);
         ok.setBackground(Color.WHITE);
         
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);       
-        textArea.setBorder(new TitledBorder(""));
-        textArea.setFont(new Font("Arial", Font.PLAIN, 50));
-        textArea.setBackground(Color.WHITE);       
+        textAreaInScroll.setLineWrap(true);
+        textAreaInScroll.setWrapStyleWord(true);       
+        textAreaInScroll.setBorder(new TitledBorder("CREATE YOUR EVENT"));
+        size.setFont50(textAreaInScroll);
+        textAreaInScroll.setBackground(Color.WHITE);       
               
         scrlPane.setWheelScrollingEnabled(true);
         scrlPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         scrollPaneTextArea.setWheelScrollingEnabled(true);
         scrollPaneTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+               
+        countOfEvents = eventsText.size();
         
-        paneRight.setBackground(Color.LIGHT_GRAY);
-        
-        countOfEvents = eventsText.length;
-        
-        for (int i = 0; i < eventsText.length; ++i) {
+        for (int i = 0; i < eventsText.size(); ++i) {
             sp.gridx = 0;
             sp.gridy = i;
             sp.gridwidth = 1;
@@ -109,15 +97,16 @@ public class dayPanel {
             sp.insets = new Insets(5, 0, 5, 0);
             sp.fill = GridBagConstraints.BOTH;
 
-            JButton btn = new JButton(eventsText[i]);
-            System.out.println(eventsText[i]);
+            JButton btn = new JButton(eventsText.get(i));
+            System.out.println(eventsText.get(i));
+         
             btn.addActionListener(new dayEventButton_Action());
-            btn.setPreferredSize(new Dimension(430, 100));
+            size.sizeButtonsInScrollPaneForEvents(btn);
             btn.setBackground(Color.WHITE);
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
             //btn.setContentAreaFilled(false);
-            btn.setFont(new Font("Arial", Font.PLAIN, 30));
+            size.setFont30(btn);
             paneInScroll.add(btn, sp);
         }
         
@@ -143,28 +132,34 @@ public class dayPanel {
             if (pressedButton != null)
                 pressedButton.setBackground(Color.WHITE);
             pressedButton = btn;
-            textArea.setText(eventText);
+            textAreaInScroll.setText(eventText);
         }
     }
     
     class createEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
-            String eventText = textArea.getText();
+            String eventText = textAreaInScroll.getText();
+            
+            ArrayList<String> eventsByDate = dumper.findEventsByDate(currentDate);
+            for (String i : eventsByDate) {
+                if (i.equals(eventText))
+                    return;
+            }
+
             if ("".equals(eventText))
                 return;
             JButton btn = new JButton(eventText);
             btn.addActionListener(new dayEventButton_Action());
-            btn.setPreferredSize(new Dimension(430, 100));
+            size.sizeButtonsInScrollPaneForEvents(btn);
             btn.setBackground(Color.RED);
             
             sp.gridx = 0;
             sp.gridy = countOfEvents;
-            System.out.println(countOfEvents);
             countOfEvents++;
             sp.gridwidth = 1;
             sp.gridheight = 1;
             sp.weightx = sp.weighty = 1.0;
-            paneInScroll.setSize(435, paneInScroll.getHeight() + 100);
+            //paneInScroll.setSize(435, paneInScroll.getHeight() + 100);
             sp.fill = GridBagConstraints.BOTH;
             paneInScroll.add(btn, sp);
             paneInScroll.updateUI();
@@ -176,28 +171,43 @@ public class dayPanel {
     class deleteEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             if (pressedButton != null) {
+                dumper.removeEvent(currentDate, pressedButton.getText());
                 paneInScroll.remove(pressedButton);
+
                     countOfEvents--;
                     pressedButton = null;
-                    textArea.setText("");
+                    textAreaInScroll.setText("");
                     paneInScroll.updateUI();
+
+                countOfEvents--;
+                pressedButton = null;
+                paneInScroll.updateUI();
+
             }
         }
     }
     
     class modifyEventButton_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
-            String eventText = textArea.getText();
+            String eventText = textAreaInScroll.getText();
             if (pressedButton != null) {
                 if ("".equals(eventText)) {
+
                     paneInScroll.remove(pressedButton);
                     return;
                 }
-                if (pressedButton.getText().equals(textArea.getText()))
+                if (pressedButton.getText().equals(textAreaInScroll.getText()))
                     return;            
+
+                    dumper.removeEvent(currentDate, pressedButton.getText());
+                    paneInScroll.remove(pressedButton);
+                    return;
+                }
+                dumper.modifyEvent(currentDate, pressedButton.getText(), eventText);
+
                 pressedButton.setText(eventText);
             }
         }
     }
 
-}
+
