@@ -191,29 +191,64 @@ public class Sizes {
         Dimension size = new Dimension();
         size.width  = (int)(43*frameHeight(getRezolution())/120);
         size.height = (int)(frameHeight(getRezolution())/2);
-        btn.setSize(size);
+        btn.setPreferredSize(size);
     }
 //*************************END DAY PANEL****************************************
 
-//WEEKS DAY PANEL
+//WEEKS DAY PANEL START*********************************************************
     public void sizeLocationWeekDayPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(frameHeight(getRezolution())*53/60);
-        size.height = (int)(frameHeight(getRezolution())/40);        
+        size.height = (int)(frameHeight(getRezolution())/24);        
 
         Point location = new Point();
         location.x = (int)((frameHeight(getRezolution()) - size.width)/2);
-        location.y = (int)((frameHeight(getRezolution())*67/240));
+        location.y = (int)(0.265*frameHeight(getRezolution()));
 
         pane.setSize(size);
         pane.setLocation(location);                            
     }
-    public void sizeofButtonsOnWeekAnaWeekDayPanel(JButton btn) {
+    public void sizeButtonsTopWeekDayPanel(JButton btn) {
         Dimension size = new Dimension();
         size.width  = (int)(29*frameHeight(getRezolution())/240);
-        size.height = (int)(0.025*frameHeight(getRezolution()));
+        size.height = (int)(frameHeight(getRezolution())/24);
         btn.setSize(size);
     }
-//END WEEKS DAY PANEL
+    public void LocationButtonsTopWeekDayPanel(JButton btn, int number) {
+        Point location = new Point();
+        location.x = (int) ((5 + number*frameHeight(getRezolution())*0.125));
+        location.y = 0;
+        btn.setLocation(location);
+    } 
+//WEEKS DAY PANEL END***********************************************************
+    
+    
+    
+//TOP WEEK PANEL START**********************************************************
+    public void sizeLocationTopWeekPanel(JPanel pane) {
+        Dimension size = new Dimension();
+        size.width  = (int)(53*frameHeight(getRezolution())/60);
+        size.height = (int)(frameHeight(getRezolution())/40);        
+
+        Point location = new Point();
+        location.x = (int)((frameHeight(getRezolution()) - size.getWidth())/2);
+        location.y = (int)((frameHeight(getRezolution())*67/240));
+
+        pane.setSize(size);
+        pane.setLocation(location);
+    }    
+    public void sizeLocationButtonsTopWeekPanel(JButton btn, int number) {
+        Dimension size = new Dimension();
+        size.width  = (int)(29*frameHeight(getRezolution())/240);
+        size.height = (int)(frameHeight(getRezolution())/40);       
+
+        Point location = new Point();
+        location.x = (int) ((frameHeight(getRezolution())/240) + number*frameHeight(getRezolution())*0.125);
+        location.y = 0;
+        
+        btn.setSize(size);
+        btn.setLocation(location);
+    }    
+//TOP WEEK PANEL END************************************************************    
 
 }

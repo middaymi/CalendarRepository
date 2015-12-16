@@ -119,6 +119,37 @@ public class dayPanel {
         pane.add(paneRight);
     }
     
+    public void updateContent(String date) {
+        currentDate = date;
+        System.out.println(date);
+        paneInScroll.removeAll();
+        paneInScroll.updateUI();
+        ArrayList<String> eventsText = dumper.findEventsByDate(date);
+        countOfEvents = eventsText.size();
+        
+        for (int i = 0; i < eventsText.size(); ++i) {
+            sp.gridx = 0;
+            sp.gridy = i;
+            sp.gridwidth = 1;
+            sp.gridheight = 1;
+            sp.weightx = sp.weighty = 1.0;
+            sp.insets = new Insets(5, 0, 5, 0);
+            sp.fill = GridBagConstraints.BOTH;
+
+            JButton btn = new JButton(eventsText.get(i));
+            System.out.println(eventsText.get(i));
+         
+            btn.addActionListener(new dayEventButton_Action());
+            size.sizeButtonsInScrollPaneForEvents(btn);
+            btn.setBackground(Color.WHITE);
+            btn.setBorderPainted(false);
+            btn.setFocusPainted(false);
+            //btn.setContentAreaFilled(false);
+            size.setFont30(btn);
+            paneInScroll.add(btn, sp);
+        }
+    }
+    
     void setDumper(Dumper newDumper) {
         if (newDumper != null)
             dumper = newDumper;
@@ -159,7 +190,7 @@ public class dayPanel {
             sp.gridwidth = 1;
             sp.gridheight = 1;
             sp.weightx = sp.weighty = 1.0;
-            //paneInScroll.setSize(435, paneInScroll.getHeight() + 100);
+            paneInScroll.setSize(435, paneInScroll.getHeight() + 100);
             sp.fill = GridBagConstraints.BOTH;
             paneInScroll.add(btn, sp);
             paneInScroll.updateUI();
@@ -186,28 +217,21 @@ public class dayPanel {
             }
         }
     }
-    
-    class modifyEventButton_Action implements ActionListener{        
+          
+    class modifyEventButton_Action implements ActionListener {        
         public void actionPerformed(ActionEvent e) {
             String eventText = textAreaInScroll.getText();
             if (pressedButton != null) {
                 if ("".equals(eventText)) {
-
-                    paneInScroll.remove(pressedButton);
-                    return;
-                }
-                if (pressedButton.getText().equals(textAreaInScroll.getText()))
-                    return;            
-
                     dumper.removeEvent(currentDate, pressedButton.getText());
                     paneInScroll.remove(pressedButton);
                     return;
                 }
                 dumper.modifyEvent(currentDate, pressedButton.getText(), eventText);
-
                 pressedButton.setText(eventText);
             }
         }
+    }
     }
 
 
