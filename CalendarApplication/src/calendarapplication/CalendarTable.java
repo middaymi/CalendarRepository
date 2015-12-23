@@ -140,7 +140,7 @@ public class CalendarTable extends JPanel {
         if (d == direction.NEXT) {
             Calendar calTmp = Calendar.getInstance();
             calTmp.set(Calendar.DATE, 1);
-            calTmp.set(Calendar.MONTH, month);
+            calTmp.set(Calendar.MONTH, month - 1);
             calTmp.set(Calendar.YEAR, year);
             calTmp.set(Calendar.DAY_OF_MONTH, 1);
             nod = calTmp.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -166,7 +166,7 @@ public class CalendarTable extends JPanel {
                 }
                 Calendar calTmp = Calendar.getInstance();
                 calTmp.set(Calendar.DATE, 1);
-                calTmp.set(Calendar.MONTH, month);
+                calTmp.set(Calendar.MONTH, month - 1);
                 calTmp.set(Calendar.YEAR, year);
                 calTmp.set(Calendar.DAY_OF_MONTH, 1);
                 nod = calTmp.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -177,7 +177,7 @@ public class CalendarTable extends JPanel {
         }
         lblMonth.setText("" + day + "." + month + "." + year);
         dayPanel.updateContent("" + day + "." + month + "." + year);
-        makeWeekDaysPanel(day + "", topWeekDaysPanel);
+        makeWeekDaysPanel("" + day + "." + month + "." + year, topWeekDaysPanel);
     }
     
     
@@ -291,7 +291,10 @@ public class CalendarTable extends JPanel {
         }        
     }   
     private void makeWeekDaysPanel(String date, JPanel pane) {
-        int seldDate = Integer.parseInt(date);      
+        String[] dateParts = date.split("\\.");
+        int day = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
         
         for (int i = 0; i < 7; ++i) {
             dateInWeek[i].setText("");
@@ -306,8 +309,8 @@ public class CalendarTable extends JPanel {
         //Get first day of month and number of days        
         Calendar calTmp = Calendar.getInstance();
         calTmp.set(Calendar.DATE, 1);
-        calTmp.set(Calendar.MONTH, currentMonth);
-        calTmp.set(Calendar.YEAR, currentYear);
+        calTmp.set(Calendar.MONTH, month - 1);
+        calTmp.set(Calendar.YEAR, year);
         calTmp.set(Calendar.DAY_OF_MONTH, 1);
         Date firstDayOfMonth = calTmp.getTime();
         som = firstDayOfMonth.getDay();
@@ -318,35 +321,46 @@ public class CalendarTable extends JPanel {
         else
             som = som - 1; 
         
-        int currentPositionOfDay = 0;
-        currentPositionOfDay = 7 - (7*(seldDate/7 + 1) - seldDate) + som;
+        int currentPositionOfDay = (day + som) % 7;
+        if (currentPositionOfDay == 0)
+            currentPositionOfDay = 7;
        
-        for (int i = (seldDate - currentPositionOfDay + 1), j = 0; 
-             i <= (seldDate + (7 - currentPositionOfDay));
-             ++i, ++j) {
-            size.sizeButtonsTopWeekDayPanel(dateInWeek[j]);
-            size.LocationButtonsTopWeekDayPanel(dateInWeek[j], j);
-            dateInWeek[j].setBorderPainted(false);
-            dateInWeek[j].setFocusPainted(false);
-            dateInWeek[j].setContentAreaFilled(false);
-            if (i <= 0 || i > nod) dateInWeek[j].setText(" ");
-            else {
-                dateInWeek[j].setText("" + i);
-                dateInWeek[j].setHorizontalTextPosition(AbstractButton.CENTER);
-                dateInWeek[j].setFont(new Font("Arial", Font.PLAIN, (int)(size.frameHeight(size.getRezolution())*0.015)));
-                if ((Integer.toString(i)).equals(date)) {
-                    //dateInWeek[j].setForeground(Color.red);
-                    imgSelectedDay = iconSelectedDay.getImage().getScaledInstance
-                                                    (dateInWeek[j].getHeight(),
-                                                     dateInWeek[j].getHeight(),
-                                                     java.awt.Image.SCALE_SMOOTH); 
-                    iconSelectedDay = new ImageIcon(imgSelectedDay);
-                    dateInWeek[j].setIcon(iconSelectedDay);               
-                }
+        for (int i = 0; i < 7; ++i) {
+            int dateNumber = day - currentPositionOfDay + i + 1;
+            if (dateNumber > nod)
+                dateNumber = dateNumber % nod;
+            
+            if (dateNumber <= 0) {
+                int prevNod;       
+                Calendar prevCalTmp = Calendar.getInstance();
+                prevCalTmp.set(Calendar.DATE, 1);
+                prevCalTmp.set(Calendar.MONTH, month - 2);
+                prevCalTmp.set(Calendar.YEAR, year);
+                prevCalTmp.set(Calendar.DAY_OF_MONTH, 1);
+                prevNod = prevCalTmp.getActualMaximum(Calendar.DAY_OF_MONTH);
+                dateNumber = prevNod + dateNumber;
             }
-            pane.add(dateInWeek[j]);             
+            
+            size.sizeButtonsTopWeekDayPanel(dateInWeek[i]);
+            size.LocationButtonsTopWeekDayPanel(dateInWeek[i], i);
+            dateInWeek[i].setBorderPainted(false);
+            dateInWeek[i].setFocusPainted(false);
+            dateInWeek[i].setContentAreaFilled(false);
+
+            if ((i + 1) == currentPositionOfDay) {
+                //dateInWeek[j].setForeground(Color.red);
+                imgSelectedDay = iconSelectedDay.getImage().getScaledInstance
+                                                (dateInWeek[i].getHeight(),
+                                                 dateInWeek[i].getHeight(),
+                                                 java.awt.Image.SCALE_SMOOTH); 
+                iconSelectedDay = new ImageIcon(imgSelectedDay);
+                dateInWeek[i].setIcon(iconSelectedDay);
+            }
+            dateInWeek[i].setText("" + dateNumber);
+            dateInWeek[i].setHorizontalTextPosition(AbstractButton.CENTER);
+            dateInWeek[i].setFont(new Font("Arial", Font.PLAIN, (int)(size.frameHeight(size.getRezolution())*0.015)));
+            pane.add(dateInWeek[i]);
         }
-        nod = som = 0;
     }   
     
     private void makeCalendarPanel(){
@@ -642,7 +656,7 @@ public class CalendarTable extends JPanel {
                 dayPanel.setDumper(dumper);
             }
             PaintMainFrame.changeCentralPanel(dayPanel.pane, panelType.DAYPANEL);
-            makeWeekDaysPanel(btn.getText(), topWeekDaysPanel);
+            makeWeekDaysPanel(selectedDate, topWeekDaysPanel);
             topWeekPanel.setLocation(topWeekPanel.getLocation().x, (int) (size.frameHeight(size.getRezolution())*19/80));
             lblMonth.setText(selectedDate);
             panelflag = panelType.DAYPANEL;
