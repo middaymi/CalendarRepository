@@ -181,16 +181,24 @@ public class Sizes {
     public void setFont50(JTextArea textArea) {
         textArea.setFont(new Font("Arial", Font.PLAIN, 
                              (int)(frameHeight(getRezolution())/24)));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        
     }
     public void setFont30(JButton btn) {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(0.025*frameHeight(getRezolution()))));
     }
+    public void setFont15(JButton btn) {
+        btn.setFont(new Font("Arial", Font.PLAIN, 
+                        (int)(0.0125*frameHeight(getRezolution()))));    
+    }
     public void sizeButtonsInScrollPaneForEvents(JButton btn) {
-        //430*100
         Dimension size = new Dimension();
         size.width  = (int)(43*frameHeight(getRezolution())/120);
-        size.height = (int)(frameHeight(getRezolution())/2);
+        size.height = (int)(frameHeight(getRezolution())/12);
+        btn.setMaximumSize(size);
+        btn.setMinimumSize(size);
         btn.setPreferredSize(size);
     }
 //*************************END DAY PANEL****************************************

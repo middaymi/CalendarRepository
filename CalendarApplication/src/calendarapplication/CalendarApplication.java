@@ -188,48 +188,86 @@ public class CalendarApplication {
         public static void changeCentralPanel(JPanel panel, panelType type) {
             
             if (type == panelType.DAYPANEL) {
-                backgroundPanel.remove(tb.changeYearPanel);
-                backgroundPanel.add(tb.topWeekPanel);
-                backgroundPanel.remove(tb.calendarPanel);
-                backgroundPanel.add(panel);
-                backgroundPanel.add(tb.topWeekDaysPanel);
+                tb.nextPrevPanel.setVisible(true);
+                if (tb.changeYearPanel != null)
+                    backgroundPanel.remove(tb.changeYearPanel);
+                if (tb.calendarPanel != null)
+                    backgroundPanel.remove(tb.calendarPanel);
                 if (tb.WeekPANEL != null)
                     backgroundPanel.remove(tb.WeekPANEL);
+                if (tb.settingsPanel != null)
+                    backgroundPanel.remove(tb.settingsPanel);
+                backgroundPanel.add(tb.topWeekPanel);
+                backgroundPanel.add(panel);
+                backgroundPanel.add(tb.topWeekDaysPanel);
                 backgroundPanel.updateUI();
             }
             if (type == panelType.MONTHPANEL) {
+                tb.nextPrevPanel.setVisible(true);
+                if (tb.settingsPanel != null)
+                    backgroundPanel.remove(tb.settingsPanel);
                 if (tb.dayPanel != null)
                     backgroundPanel.remove(tb.dayPanel.pane);
-                backgroundPanel.remove(tb.topWeekDaysPanel);
+                if (tb.calendarPanel != null)
+                    backgroundPanel.remove(tb.topWeekDaysPanel);                
+                if (tb.calendarPanel != null)
+                    backgroundPanel.remove(tb.yearPanel);
+                if (tb.WeekPANEL != null)
+                    backgroundPanel.remove(tb.WeekPANEL);
                 backgroundPanel.add(tb.changeYearPanel);
                 backgroundPanel.add(tb.topWeekPanel);
                 backgroundPanel.add(tb.calendarPanel);
-                backgroundPanel.remove(tb.yearPanel);
-                if (tb.WeekPANEL != null)
-                    backgroundPanel.remove(tb.WeekPANEL);
                 backgroundPanel.updateUI();
             }
             if (type == panelType.WEEKPANEL) {
-                backgroundPanel.remove(tb.calendarPanel);
-                backgroundPanel.remove(tb.changeYearPanel);
-//                backgroundPanel.remove(tb.dayPanel);
-                backgroundPanel.remove(tb.topWeekPanel);
-                backgroundPanel.remove(tb.WeekPANEL);
+                tb.nextPrevPanel.setVisible(true);
+                if (tb.calendarPanel != null)
+                    backgroundPanel.remove(tb.calendarPanel);
+                if (tb.changeYearPanel != null)
+                    backgroundPanel.remove(tb.changeYearPanel);
+                if (tb.topWeekPanel != null)
+                    backgroundPanel.remove(tb.topWeekPanel);
+                if (tb.dayPanel != null)
+                    backgroundPanel.remove(tb.dayPanel.pane);
+                if (tb.yearPanel != null) 
+                    backgroundPanel.remove(tb.yearPanel);
+                backgroundPanel.add(tb.WeekPANEL);
                 backgroundPanel.updateUI();
             }
             
             if (type == panelType.YEARPANEL) {
+                tb.nextPrevPanel.setVisible(true);
+                backgroundPanel.remove(tb.settingsPanel);
+                if (tb.calendarPanel != null)
+                    backgroundPanel.remove(tb.calendarPanel);
+                if (tb.changeYearPanel != null)
+                    backgroundPanel.remove(tb.changeYearPanel);
+                if (tb.dayPanel != null)
+                    backgroundPanel.remove(tb.dayPanel.pane);
+                if (tb.topWeekDaysPanel != null)
+                    backgroundPanel.remove(tb.topWeekDaysPanel);
+                if (tb.topWeekPanel != null)
+                    backgroundPanel.remove(tb.topWeekPanel);
+                if (tb.WeekPANEL != null)
+                    backgroundPanel.remove(tb.WeekPANEL);
+                backgroundPanel.add(tb.yearPanel);
+                backgroundPanel.updateUI();
+            }
+            
+             if (type == panelType.SETPANEL) {
+                tb.nextPrevPanel.setVisible(false);
                 backgroundPanel.remove(tb.calendarPanel);
                 backgroundPanel.remove(tb.changeYearPanel);
                 if (tb.dayPanel != null)
                     backgroundPanel.remove(tb.dayPanel.pane);
                 if (tb.topWeekDaysPanel != null)
                     backgroundPanel.remove(tb.topWeekDaysPanel);
-//                backgroundPanel.remove(tb.dayPanel);
                 backgroundPanel.remove(tb.topWeekPanel);
                 if (tb.WeekPANEL != null)
                     backgroundPanel.remove(tb.WeekPANEL);
-                backgroundPanel.add(tb.yearPanel);
+                if (tb.yearPanel != null)
+                    backgroundPanel.remove(tb.yearPanel);
+                backgroundPanel.add(tb.settingsPanel);
                 backgroundPanel.updateUI();
             }
         }

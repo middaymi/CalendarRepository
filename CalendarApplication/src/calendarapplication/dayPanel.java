@@ -34,15 +34,23 @@ public class dayPanel {
         paneInScroll = new JPanel();
         paneRight = new JPanel();
         textAreaInScroll = new JTextArea(5, 10);
-        JButton del = new JButton("DEL");
-        JButton ok = new JButton("SAVE");
-        JButton create = new JButton("CREATE");
+        JButton del = new JButton();
+        JButton ok = new JButton();
+        JButton create = new JButton();
         JScrollPane scrlPane = new JScrollPane(paneInScroll);
         JScrollPane scrollPaneTextArea = new JScrollPane(textAreaInScroll);
         
         create.addActionListener(new createEventButton_Action());
         del.addActionListener(new deleteEventButton_Action());
         ok.addActionListener(new modifyEventButton_Action());
+        
+        del.setText("del");
+        ok.setText("save");
+        create.setText("create");
+        
+        size.setFont15(del);
+        size.setFont15(ok);
+        size.setFont15(create);       
         
         size.sizeLocationCentralPanel(pane);
         size.sizeLocationPaneInScroll(paneInScroll);
@@ -63,13 +71,7 @@ public class dayPanel {
         paneInScroll.setOpaque(false);
         scrlPane.setOpaque(false);
         scrollPaneTextArea.setOpaque(false);
-        
-        //pane.setBackground(Color.orange);
-        //paneInScroll.setBackground(Color.orange);
-        //scrlPane.setBackground(Color.orange);
-        //scrollPaneTextArea.setBackground(Color.orange);
-        //paneRight.setBackground(Color.LIGHT_GRAY);
-        
+                
         del.setBackground(Color.WHITE);
         create.setBackground(Color.WHITE);
         ok.setBackground(Color.WHITE);
@@ -98,7 +100,6 @@ public class dayPanel {
             sp.fill = GridBagConstraints.BOTH;
 
             JButton btn = new JButton(eventsText.get(i));
-            System.out.println(eventsText.get(i));
          
             btn.addActionListener(new dayEventButton_Action());
             size.sizeButtonsInScrollPaneForEvents(btn);
@@ -121,7 +122,6 @@ public class dayPanel {
     
     public void updateContent(String date) {
         currentDate = date;
-        System.out.println(date);
         paneInScroll.removeAll();
         paneInScroll.updateUI();
         ArrayList<String> eventsText = dumper.findEventsByDate(date);
@@ -137,7 +137,6 @@ public class dayPanel {
             sp.fill = GridBagConstraints.BOTH;
 
             JButton btn = new JButton(eventsText.get(i));
-            System.out.println(eventsText.get(i));
          
             btn.addActionListener(new dayEventButton_Action());
             size.sizeButtonsInScrollPaneForEvents(btn);
@@ -147,6 +146,7 @@ public class dayPanel {
             //btn.setContentAreaFilled(false);
             size.setFont30(btn);
             paneInScroll.add(btn, sp);
+            textAreaInScroll.setText("");
         }
     }
     
@@ -190,7 +190,7 @@ public class dayPanel {
             sp.gridwidth = 1;
             sp.gridheight = 1;
             sp.weightx = sp.weighty = 1.0;
-            paneInScroll.setSize(435, paneInScroll.getHeight() + 100);
+            //paneInScroll.setSize(435, paneInScroll.getHeight() + 500);
             sp.fill = GridBagConstraints.BOTH;
             paneInScroll.add(btn, sp);
             paneInScroll.updateUI();
