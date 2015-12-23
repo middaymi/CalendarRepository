@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 
-enum panelType {DAYPANEL, MONTHPANEL, WEEK}
+enum panelType {DAYPANEL, MONTHPANEL, WEEKPANEL, YEARPANEL}
 enum direction {PREV, NEXT}
 
 public class CalendarTable extends JPanel {
@@ -45,6 +45,7 @@ public class CalendarTable extends JPanel {
     JPanel calendarPanel;
     dayPanel dayPanel;
     JPanel WeekPANEL;
+    JPanel yearPanel;
     JPanel bottomPanel;
     JButton btnPrev, btnNext;
     JButton ButtonLeft;
@@ -77,6 +78,7 @@ public class CalendarTable extends JPanel {
     String[] months =  {"January", "February", "March", "April", "May", "June", 
                         "July", "August", "September", "October", "November", "December"};
     JButton[] dateInWeek;
+    JButton[] yearButtons;
     
     int currentPosition = 0;
     Sizes size;
@@ -91,6 +93,7 @@ public class CalendarTable extends JPanel {
         makeBottomPanel();
         makeWeekPANEL();
         weekDaysPanel();
+        yearPanel = yearPanel();
         panelflag = panelType.MONTHPANEL;
         isInit = false;
         
@@ -129,6 +132,7 @@ public class CalendarTable extends JPanel {
         }          
        
         refreshCalendar (realMonth, realYear); //Refresh calendar
+        System.out.println("1");
 
         //Register action listeners
         cmbYear.addActionListener(new cmbYear_Action());
@@ -182,14 +186,17 @@ public class CalendarTable extends JPanel {
     
     
     private void refreshCalendar(int month, int year) {
+        
+        System.out.println("" + month);
         int nod, som; //Number Of Days, Start Of Month
         
-        lblMonth.setText(months[month]); //Refresh the month label (at the top)
+        
         lblMonth.setHorizontalAlignment(JLabel.CENTER);
         Font fontMonth = (new Font("Arial", Font.PLAIN, size.frameHeight(size.getRezolution())/30));
         lblMonth.setFont(fontMonth);        
                 
-        cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box   
+        cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box 
+        lblMonth.setText(months[month]); //Refresh the month label (at the top)
         
         //Clear table
         for (int m = 0; m < rows; m++){
@@ -596,6 +603,7 @@ public class CalendarTable extends JPanel {
             buttonYear.setBorderPainted(false);
             buttonYear.setFocusPainted(false);
             buttonYear.setContentAreaFilled(false);
+            buttonYear.addActionListener(new selectedYear_Action());
             bp.fill = GridBagConstraints.BOTH;
             bp.weightx = 0.25;
             bp.weighty = 0.25;
@@ -635,6 +643,33 @@ public class CalendarTable extends JPanel {
 
         return bottomPanel;
     }
+    
+    public JPanel yearPanel() {
+        yearPanel = new JPanel();
+        size.sizeLocationCentralPanel(yearPanel);
+        yearPanel.setLayout(new GridBagLayout());
+        yearPanel.setOpaque(false);
+        GridBagConstraints yp = new GridBagConstraints();
+        yearButtons = new JButton[12];
+        for(int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                yearButtons[j] = new JButton();
+                yearButtons[j].addActionListener(new selectedMonthOfYear_Action());
+                yearButtons[j].setBackground(Color.LIGHT_GRAY);
+                yearButtons[j].setText(months[i*3 + j]);
+                yp.gridx = j;
+                yp.gridy = i;
+                yp.gridwidth = 1;
+                yp.gridheight = 1;
+                yp.weightx = yp.weighty = 0.5;
+                yp.insets = new Insets(5, 5, 5, 5);                
+                yp.fill = GridBagConstraints.BOTH; 
+                yearPanel.add(yearButtons[j], yp);
+            }
+        }
+        yearPanel.setVisible(true);
+        return yearPanel;
+    }        
      class cmbYear_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (cmbYear.getSelectedItem() != null){
@@ -644,7 +679,7 @@ public class CalendarTable extends JPanel {
             }
         }
     }
-    class selectedDay_Action implements ActionListener{        
+class selectedDay_Action implements ActionListener{        
         public void actionPerformed(ActionEvent e) {
             JButton btn = (JButton)e.getSource();
             selectedNumber = btn.getText();
@@ -671,18 +706,48 @@ public class CalendarTable extends JPanel {
             panelflag = panelType.MONTHPANEL;
             topWeekPanel.setLocation(topWeekPanel.getLocation().x, (size.frameHeight(size.getRezolution())*67/240));
             refreshCalendar(currentMonth, currentYear);
+            System.out.println("3");
         }
     }    
     class selectedWeek_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {            
             if (WeekPANEL == null) 
                 WeekPANEL = makeWeekPANEL();
-            if (panelflag == panelType.WEEK)
+            if (panelflag == panelType.WEEKPANEL)
                 return;
-            PaintMainFrame.changeCentralPanel(WeekPANEL, panelType.WEEK);
-            panelflag = panelflag.WEEK;
+            PaintMainFrame.changeCentralPanel(WeekPANEL, panelType.WEEKPANEL);
+            panelflag = panelType.WEEKPANEL;
         }
     }
+    
+    class selectedYear_Action implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            if (yearPanel == null)
+                yearPanel = yearPanel();
+            if (panelflag == panelType.YEARPANEL)
+                return;
+            lblMonth.setText("" + currentYear);
+            PaintMainFrame.changeCentralPanel(yearPanel, panelType.YEARPANEL);
+            panelflag = panelType.YEARPANEL;
+        }
+    }
+    
+    class selectedMonthOfYear_Action implements ActionListener{        
+        public void actionPerformed(ActionEvent e) {
+            PaintMainFrame.changeCentralPanel(calendarPanel, panelType.MONTHPANEL);
+            panelflag = panelType.MONTHPANEL;
+            topWeekPanel.setLocation(topWeekPanel.getLocation().x, (size.frameHeight(size.getRezolution())*67/240));
+            JButton btn = (JButton)e.getSource();
+            for (int i = 0; i < months.length; ++i)
+                if (months[i].equals(btn.getText())) {
+                    currentMonth = i;
+                    refreshCalendar(currentMonth, currentYear);
+                    System.out.println("4");
+                    break;
+                }
+        }
+    }    
+    
     class btnPrev_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (panelflag == panelType.DAYPANEL) {
@@ -692,7 +757,7 @@ public class CalendarTable extends JPanel {
                            Integer.parseInt(dateParts[1]),
                            Integer.parseInt(dateParts[2]),
                            direction.PREV);               
-            } else {
+            } else if (panelflag == panelType.MONTHPANEL) {
                 if (currentMonth == 0){ //Back one year
                     currentMonth = 11;
                     currentYear -= 1;
@@ -700,6 +765,10 @@ public class CalendarTable extends JPanel {
                     currentMonth -= 1;
                 }
                 refreshCalendar(currentMonth, currentYear);
+                System.out.println("5");
+            } else if (panelflag == panelType.YEARPANEL) {
+                currentYear--;
+                lblMonth.setText("" + currentYear);
             }
         }
     }
@@ -713,7 +782,7 @@ public class CalendarTable extends JPanel {
                            Integer.parseInt(dateParts[2]),
                            direction.NEXT);               
             }
-            else {
+            else if (panelflag == panelType.MONTHPANEL) {
                 if (currentMonth == 11){ //Foward one year
                     currentMonth = 0;
                     currentYear += 1;
@@ -722,6 +791,10 @@ public class CalendarTable extends JPanel {
                     currentMonth += 1;
                 }
                 refreshCalendar(currentMonth, currentYear);
+                System.out.println("6");
+            } else if (panelflag == panelType.YEARPANEL) {
+                currentYear++;
+                lblMonth.setText("" + currentYear);
             }
         }
     }
