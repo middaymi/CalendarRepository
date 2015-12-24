@@ -147,8 +147,8 @@ public class dayPanel {
             //btn.setContentAreaFilled(false);
             
             paneInScroll.add(btn, sp);
-            textAreaInScroll.setText("");
         }
+        textAreaInScroll.setText("");
     }
     
     void setDumper(Dumper newDumper) {
