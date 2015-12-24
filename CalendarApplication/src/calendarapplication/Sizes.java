@@ -189,6 +189,10 @@ public class Sizes {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(0.025*frameHeight(getRezolution()))));
     }
+     public void setFont40(JButton btn) {
+        btn.setFont(new Font("Arial", Font.PLAIN, 
+                        (int)(frameHeight(getRezolution())/30)));
+    }
     public void setFont15(JButton btn) {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(0.0125*frameHeight(getRezolution()))));    

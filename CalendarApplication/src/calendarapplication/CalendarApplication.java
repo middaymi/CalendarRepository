@@ -277,12 +277,7 @@ public class CalendarApplication {
         Image im = Toolkit.getDefaultToolkit().getImage("images\\48.png");
         frame.setIconImage(im);
         frame.show();
-    }
-    
-
-    
-    
-    
+    }   
     
     public static void main(String[] args) {
         PaintMainFrame frame = new PaintMainFrame();

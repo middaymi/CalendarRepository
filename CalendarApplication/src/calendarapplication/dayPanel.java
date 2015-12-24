@@ -107,7 +107,7 @@ public class dayPanel {
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
             //btn.setContentAreaFilled(false);
-            size.setFont30(btn);
+            size.setFont40(btn);
             paneInScroll.add(btn, sp);
         }
         
@@ -135,8 +135,9 @@ public class dayPanel {
             sp.weightx = sp.weighty = 1.0;
             sp.insets = new Insets(5, 0, 5, 0);
             sp.fill = GridBagConstraints.BOTH;
-
+            
             JButton btn = new JButton(eventsText.get(i));
+            size.setFont40(btn);
          
             btn.addActionListener(new dayEventButton_Action());
             size.sizeButtonsInScrollPaneForEvents(btn);
@@ -144,7 +145,7 @@ public class dayPanel {
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
             //btn.setContentAreaFilled(false);
-            size.setFont30(btn);
+            
             paneInScroll.add(btn, sp);
             textAreaInScroll.setText("");
         }
@@ -183,6 +184,7 @@ public class dayPanel {
             btn.addActionListener(new dayEventButton_Action());
             size.sizeButtonsInScrollPaneForEvents(btn);
             btn.setBackground(Color.RED);
+            size.setFont40(btn);
             
             sp.gridx = 0;
             sp.gridy = countOfEvents;
