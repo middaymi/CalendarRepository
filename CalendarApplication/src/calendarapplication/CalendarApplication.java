@@ -77,7 +77,7 @@ public class CalendarApplication {
             JButton close = new JButton();
         
     	PaintMainFrame() {
-            super("Calendar"); 
+            super("Viseman"); 
             size = new Sizes();
             try {    
                 setUndecorated(true);

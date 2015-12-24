@@ -19,13 +19,29 @@ public class Sizes {
     public  int frameHeight(Dimension exSize){
         return(exSize.height*2/3);
     } 
+    
+    //for bottom panel
+    public JButton sizeLocationBtnBottomPanel(JButton btn, int i) {
+        Dimension size = new Dimension();
+        size.height = (int)(frameHeight(getRezolution())/12); 
+        size.width  = (int)(frameHeight(getRezolution())/6);
+        
+        Point location = new Point(); 
+        location.x = i * size.width;
+        location.y = 0;
+        
+        btn.setSize(size);
+        btn.setLocation(location);
+        return btn;
+    }
+    
     public  JPanel setSizeLocationBottomPanel(JPanel pane) {  
         Dimension size = new Dimension();
         size.height = (int)(frameHeight(getRezolution())/12); 
-        size.width  = (int)(2*frameHeight(getRezolution())/3);
+        size.width  = (int)(frameHeight(getRezolution()) - frameHeight(getRezolution())/2);
         
         Point location = new Point();
-        location.x = (int)(0.15*frameHeight(getRezolution()));
+        location.x = (int)(0.25*frameHeight(getRezolution()));
         location.y = (int) (frameHeight(getRezolution()) 
                             - size.height
                             - CountBorder()

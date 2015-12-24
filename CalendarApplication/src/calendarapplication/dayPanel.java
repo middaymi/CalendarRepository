@@ -46,7 +46,7 @@ public class dayPanel {
         
         del.setText("del");
         ok.setText("save");
-        create.setText("create");
+        create.setText("add");
         
         size.setFont15(del);
         size.setFont15(ok);
