@@ -274,7 +274,7 @@ public class CalendarApplication {
     }
      //set icon on the frame and application's icon
     private static void setApplicationIcon(JFrame frame) {
-        Image im = Toolkit.getDefaultToolkit().getImage("images\\48.png");
+        Image im = Toolkit.getDefaultToolkit().getImage("images\\logo50.png");
         frame.setIconImage(im);
         frame.show();
     }   

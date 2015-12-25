@@ -2,12 +2,14 @@ package calendarapplication;
 
 import calendarapplication.Controller.Dumper;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,23 +36,15 @@ public class dayPanel {
         paneInScroll = new JPanel();
         paneRight = new JPanel();
         textAreaInScroll = new JTextArea(5, 10);
-        JButton del = new JButton();
-        JButton ok = new JButton();
-        JButton create = new JButton();
+        JButton del = new JButton("del");
+        JButton ok = new JButton("save");
+        JButton create = new JButton("add");
         JScrollPane scrlPane = new JScrollPane(paneInScroll);
         JScrollPane scrollPaneTextArea = new JScrollPane(textAreaInScroll);
         
         create.addActionListener(new createEventButton_Action());
         del.addActionListener(new deleteEventButton_Action());
-        ok.addActionListener(new modifyEventButton_Action());
-        
-        del.setText("del");
-        ok.setText("save");
-        create.setText("add");
-        
-        size.setFont15(del);
-        size.setFont15(ok);
-        size.setFont15(create);       
+        ok.addActionListener(new modifyEventButton_Action());    
         
         size.sizeLocationCentralPanel(pane);
         size.sizeLocationPaneInScroll(paneInScroll);
@@ -60,8 +54,8 @@ public class dayPanel {
         size.sizeLocationButtonOnPaneRight(del, 1);
         size.sizeLocationButtonOnPaneRight(create, 2);
         size.sizeLocationButtonOnPaneRight(ok, 3);
-        size.sizeLocationTextAreaInScroll(textAreaInScroll);      
-        
+        size.sizeLocationTextAreaInScroll(textAreaInScroll); 
+               
         pane.setLayout(null);
         paneInScroll.setLayout(new GridBagLayout());
         sp = new GridBagConstraints();

@@ -4,17 +4,13 @@ import static calendarapplication.CalendarApplication.PaintMainFrame;
 import calendarapplication.Controller.Dumper;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -104,6 +100,7 @@ public class CalendarTable extends JPanel {
     
     int currentPosition = 0;
     Sizes size;
+    Border thickBorder;
     
     CalendarTable () {
         
@@ -225,7 +222,7 @@ public class CalendarTable extends JPanel {
     private void refreshCalendar(int month, int year) {
 
         int nod, som; //Number Of Days, Start Of Month
-        Border thickBorder = new LineBorder(Color.GREEN, size.frameHeight(size.getRezolution())/240);
+        thickBorder = new LineBorder(Color.GREEN, size.frameHeight(size.getRezolution())/240);
         
         
         lblMonth.setHorizontalAlignment(JLabel.CENTER);
@@ -239,9 +236,14 @@ public class CalendarTable extends JPanel {
         for (int m = 0; m < rows; m++){
             for (int n = 0; n < collumns; n++){
                 buttons[m][n].setText("");
-                buttons[m][n].setBackground(Color.LIGHT_GRAY);
-                buttons[m][n].setBorder(null);
+                buttons[m][n].setBackground(Color.LIGHT_GRAY);                
                 buttons[m][n].removeActionListener(new selectedDay_Action());
+                buttons[m][n].setBorder(null);
+                buttons[m][n].setBorderPainted(true);
+                buttons[m][n].setFocusPainted(true);
+                buttons[m][n].setContentAreaFilled(true);
+                buttons[m][n].setEnabled(true);
+                buttons[m][n].updateUI();                
             }  
         }
 
@@ -292,6 +294,7 @@ public class CalendarTable extends JPanel {
                     if ((j < som && i == 0) || (currentPosition > nod)) {
                         buttons[i][j].setText(" ");
                         buttons[i][j].setHorizontalTextPosition(AbstractButton.CENTER);
+                        buttons[i][j].setEnabled(false);
                     } else {
                         //if used
                         if (currentPosition <= nod) {
@@ -303,7 +306,10 @@ public class CalendarTable extends JPanel {
                     }
                 }
                 if (isInit == false)
+                   buttons[i][j].setMinimumSize(buttons[i][j].getPreferredSize());
                   calendarPanel.add(buttons[i][j], cp);
+                  //calendarPanel.updateUI(); 
+                
             }
         }
         isInit = true;

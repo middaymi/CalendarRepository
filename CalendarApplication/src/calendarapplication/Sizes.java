@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -166,17 +167,18 @@ public class Sizes {
     }
     public void sizeButtonsOnPaneRight(JButton btn) {
         Dimension size = new Dimension();
-        size.width  = (int)(frameHeight(getRezolution())/12);
+        size.width  = (int)(31*frameHeight(getRezolution())/256);
+        System.out.println(size.width);
+        System.out.println((int)(frameHeight(getRezolution())));
         size.height = (int)(frameHeight(getRezolution())/24);
         btn.setSize(size);
     }
     public void sizeLocationButtonOnPaneRight(JButton btn, int number) {
-        sizeButtonsOnPaneRight(btn);
-        
+        sizeButtonsOnPaneRight(btn);        
         Point location = new Point();
-        if (number == 1) location.x = (int)(frameHeight(getRezolution())/16);
-        if (number == 2) location.x = (int)(5*frameHeight(getRezolution())/24);
-        if (number == 3) location.x = (int)(17*frameHeight(getRezolution())/48);
+        if (number == 1) location.x = (int)(frameHeight(getRezolution())/16-15);
+        if (number == 2) location.x = (int)(5*frameHeight(getRezolution())/24-15);
+        if (number == 3) location.x = (int)(17*frameHeight(getRezolution())/48-15);
         
         location.y = (int)(11*frameHeight(getRezolution())/24);
         
@@ -212,6 +214,10 @@ public class Sizes {
     public void setFont15(JButton btn) {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(0.0125*frameHeight(getRezolution()))));    
+    }
+    public void setFont10(JButton btn) {
+        //btn.setHorizontalTextPosition(AbstractButton.CENTER);
+        btn.setFont(new Font("Arial", Font.PLAIN, 15));  
     }
     public void sizeButtonsInScrollPaneForEvents(JButton btn) {
         Dimension size = new Dimension();
