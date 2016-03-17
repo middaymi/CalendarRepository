@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,7 +38,8 @@ public class Sizes {
     public  JPanel setSizeLocationBottomPanel(JPanel pane) {  
         Dimension size = new Dimension();
         size.height = (int)(frameHeight(getRezolution())/12); 
-        size.width  = (int)(frameHeight(getRezolution()) - frameHeight(getRezolution())/2);
+        size.width  = (int)(frameHeight(getRezolution()) 
+                          - frameHeight(getRezolution())/2);
         
         Point location = new Point();
         location.x = (int)(0.25*frameHeight(getRezolution()));
@@ -50,7 +50,8 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);
         return (pane); 
-    }    
+    } 
+    
     public  void setSizeLocationChangeYearPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(5*frameHeight(getRezolution())/24);
@@ -62,7 +63,8 @@ public class Sizes {
         
         pane.setSize(size);
         pane.setLocation(location); 
-    } 
+    }
+    
     public  JPanel setSizeLocationNextPrevPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(frameHeight(getRezolution()) - 2*CountBorder());
@@ -76,6 +78,7 @@ public class Sizes {
         pane.setLocation(location);
         return (pane); 
     }
+    
     public  JButton setSizeButtonsNextPrevPanel(JButton button) {
         Dimension size = new Dimension();
         size.width  = (int)(0.925*frameHeight(getRezolution())/3);
@@ -84,6 +87,7 @@ public class Sizes {
         button.setSize(size);
         return (button); 
     } 
+    
     public  void setSizeLocationCloseTurnPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(11*frameHeight(getRezolution())/120);
@@ -98,6 +102,7 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);   
     }
+    
     public void sizeLocationCentralPanel(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(53*frameHeight(getRezolution())/60);
@@ -110,6 +115,7 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);
     }
+    
     public  int CountBorder() {
         int count = 0;
         count = (int)(frameHeight(getRezolution())*0.025);
@@ -129,6 +135,7 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);  
     }
+    
     public void sizeLocationScrollPaneTextArea(JScrollPane spane) {
         Dimension size = new Dimension();
         size.width  = (int)(0.375*frameHeight(getRezolution()));
@@ -141,6 +148,7 @@ public class Sizes {
         spane.setSize(size);
         spane.setLocation(location); 
     }
+    
     public void sizeLocationPaneRight(JPanel pane) {
         Dimension size = new Dimension();
         size.width  = (int)(38*frameHeight(getRezolution())/75);
@@ -153,6 +161,7 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);
     }
+    
     public void sizeLocationScrlPane(JScrollPane spane){
         Dimension size = new Dimension();
         size.width  = (int)(0.375*frameHeight(getRezolution()));
@@ -165,25 +174,25 @@ public class Sizes {
         spane.setSize(size);
         spane.setLocation(location);
     }
+    
     public void sizeButtonsOnPaneRight(JButton btn) {
         Dimension size = new Dimension();
         size.width  = (int)(31*frameHeight(getRezolution())/256);
-        System.out.println(size.width);
-        System.out.println((int)(frameHeight(getRezolution())));
         size.height = (int)(frameHeight(getRezolution())/24);
         btn.setSize(size);
     }
+    
     public void sizeLocationButtonOnPaneRight(JButton btn, int number) {
         sizeButtonsOnPaneRight(btn);        
         Point location = new Point();
-        if (number == 1) location.x = (int)(frameHeight(getRezolution())/16-15);
-        if (number == 2) location.x = (int)(5*frameHeight(getRezolution())/24-15);
-        if (number == 3) location.x = (int)(17*frameHeight(getRezolution())/48-15);
+        if (number == 1) location.x = (int)(0.05*frameHeight(getRezolution()));
+        if (number == 2) location.x = (int)(47*frameHeight(getRezolution())/240);
+        if (number == 3) location.x = (int)(41*frameHeight(getRezolution())/120);
         
-        location.y = (int)(11*frameHeight(getRezolution())/24);
-        
+        location.y = (int)(11*frameHeight(getRezolution())/24);        
         btn.setLocation(location);
     }
+    
     public void sizeLocationTextAreaInScroll(JTextArea textArea) {
         Dimension size = new Dimension();
         size.width  = (int)(0.375*frameHeight(getRezolution()));
@@ -196,6 +205,7 @@ public class Sizes {
         textArea.setSize(size);
         textArea.setLocation(location);
     }
+    
     public void setFont50(JTextArea textArea) {
         textArea.setFont(new Font("Arial", Font.PLAIN, 
                              (int)(frameHeight(getRezolution())/24)));
@@ -203,22 +213,17 @@ public class Sizes {
         textArea.setWrapStyleWord(true);
         
     }
+    
     public void setFont30(JButton btn) {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(0.025*frameHeight(getRezolution()))));
     }
-     public void setFont40(JButton btn) {
+    
+    public void setFont40(JButton btn) {
         btn.setFont(new Font("Arial", Font.PLAIN, 
                         (int)(frameHeight(getRezolution())/30)));
     }
-    public void setFont15(JButton btn) {
-        btn.setFont(new Font("Arial", Font.PLAIN, 
-                        (int)(0.0125*frameHeight(getRezolution()))));    
-    }
-    public void setFont10(JButton btn) {
-        //btn.setHorizontalTextPosition(AbstractButton.CENTER);
-        btn.setFont(new Font("Arial", Font.PLAIN, 15));  
-    }
+   
     public void sizeButtonsInScrollPaneForEvents(JButton btn) {
         Dimension size = new Dimension();
         size.width  = (int)(43*frameHeight(getRezolution())/120);
@@ -242,12 +247,14 @@ public class Sizes {
         pane.setSize(size);
         pane.setLocation(location);                            
     }
+    
     public void sizeButtonsTopWeekDayPanel(JButton btn) {
         Dimension size = new Dimension();
         size.width  = (int)(29*frameHeight(getRezolution())/240);
         size.height = (int)(frameHeight(getRezolution())/24);
         btn.setSize(size);
     }
+    
     public void LocationButtonsTopWeekDayPanel(JButton btn, int number) {
         Point location = new Point();
         location.x = (int) ((5 + number*frameHeight(getRezolution())*0.125));
@@ -270,19 +277,20 @@ public class Sizes {
 
         pane.setSize(size);
         pane.setLocation(location);
-    }    
+    } 
+    
     public void sizeLocationButtonsTopWeekPanel(JButton btn, int number) {
         Dimension size = new Dimension();
         size.width  = (int)(29*frameHeight(getRezolution())/240);
         size.height = (int)(frameHeight(getRezolution())/40);       
 
         Point location = new Point();
-        location.x = (int) ((frameHeight(getRezolution())/240) + number*frameHeight(getRezolution())*0.125);
+        location.x = (int) ((frameHeight(getRezolution())/240) 
+                     + number*frameHeight(getRezolution())*0.125);
         location.y = 0;
         
         btn.setSize(size);
         btn.setLocation(location);
     }    
 //TOP WEEK PANEL END************************************************************    
-
 }

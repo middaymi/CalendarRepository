@@ -21,7 +21,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -49,17 +48,7 @@ public class CalendarApplication {
             g2d.dispose();
         }
     }
-    public static class ImageLabel extends JLabel {        
-        Image image;
-        public void SetBackground(Image image) {
-            this.image = image;        
-        }
-        @Override        
-        public void paintComponent(Graphics G) {
-            super.paintComponent(G);
-            G.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);                
-        }
-    }
+        
     //create main frame
     public static class PaintMainFrame extends JFrame  {
             
@@ -94,8 +83,7 @@ public class CalendarApplication {
             iconTurn = new ImageIcon(imgTurn);
             iconClose = new ImageIcon(imgClose);       
                                                                                           
-            backgroundPanel.setLayout(null);             
-            
+            backgroundPanel.setLayout(null);               
             
             //*********************START TurnClosePanel*************************
             //settings panel
@@ -120,7 +108,8 @@ public class CalendarApplication {
             public void componentResized(ComponentEvent e) {
                 JButton button = (JButton) e.getComponent();
                 Dimension size = button.getSize();
-                Image scaled = imgTurn.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                Image scaled = imgTurn.getScaledInstance(size.width, size.height, 
+                               java.awt.Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(scaled));
             };});
             //ActionTurnBotton
@@ -147,7 +136,8 @@ public class CalendarApplication {
             public void componentResized(ComponentEvent e) {
                 JButton button = (JButton) e.getComponent();
                 Dimension size = button.getSize();
-                Image scaled = imgClose.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                Image scaled = imgClose.getScaledInstance(size.width, size.height, 
+                               java.awt.Image.SCALE_SMOOTH);
                 button.setIcon(new ImageIcon(scaled));
             };});
             //ActionCloseBotton
@@ -185,6 +175,7 @@ public class CalendarApplication {
     	    setVisible(true);        
         }
         
+        //for change panels 
         public static void changeCentralPanel(JPanel panel, panelType type) {
             
             if (type == panelType.DAYPANEL) {
@@ -218,23 +209,7 @@ public class CalendarApplication {
                 backgroundPanel.add(tb.topWeekPanel);
                 backgroundPanel.add(tb.calendarPanel);
                 backgroundPanel.updateUI();
-            }
-            if (type == panelType.WEEKPANEL) {
-                tb.nextPrevPanel.setVisible(true);
-                if (tb.calendarPanel != null)
-                    backgroundPanel.remove(tb.calendarPanel);
-                if (tb.changeYearPanel != null)
-                    backgroundPanel.remove(tb.changeYearPanel);
-                if (tb.topWeekPanel != null)
-                    backgroundPanel.remove(tb.topWeekPanel);
-                if (tb.dayPanel != null)
-                    backgroundPanel.remove(tb.dayPanel.pane);
-                if (tb.yearPanel != null) 
-                    backgroundPanel.remove(tb.yearPanel);
-                backgroundPanel.add(tb.WeekPANEL);
-                backgroundPanel.updateUI();
-            }
-            
+            }            
             if (type == panelType.YEARPANEL) {
                 tb.nextPrevPanel.setVisible(true);
                 backgroundPanel.remove(tb.settingsPanel);
@@ -272,9 +247,11 @@ public class CalendarApplication {
             }
         }
     }
+    
      //set icon on the frame and application's icon
     private static void setApplicationIcon(JFrame frame) {
         Image im = Toolkit.getDefaultToolkit().getImage("images\\logo50.png");
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images\\logo50.png"));
         frame.setIconImage(im);
         frame.show();
     }   

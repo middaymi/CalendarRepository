@@ -73,10 +73,6 @@ public class Controller {
                 dBuilder = dbFactory.newDocumentBuilder();
                 doc = dBuilder.parse(xmlFile);
                 doc.getDocumentElement().normalize();
-
-            //this.title = doc.getDocumentElement().getElementsByTagName("application-name").item(0).getTextContent();
-            //this.isAdditionalActive = (Integer.parseInt(doc.getDocumentElement().getElementsByTagName("additional-info").item(0).getTextContent()) == 1) ? true : false;
-            //this.addInfoFileName = doc.getDocumentElement().getElementsByTagName("file-name").item(0).getTextContent();           	
         
             } catch (ParserConfigurationException ex) {
                 createDB(path);
@@ -104,7 +100,7 @@ public class Controller {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        //for save event
         @Override
         public void saveEvent(String date, String text) {
             Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
@@ -130,7 +126,7 @@ public class Controller {
 
             transferChanges(xmlFile);
         }
-
+        //find event
         @Override
         public ArrayList<String> findEventsByDate(String date) {
             ArrayList<String> eventsArray = new ArrayList<>();
@@ -144,11 +140,10 @@ public class Controller {
                 NodeList eventsElements = dateElement.getElementsByTagName("event");
                 for (int i = 0; eventsElements.item(i) != null; ++i)
                     eventsArray.add(eventsElements.item(i).getTextContent());
-            }
-            
+            }            
             return eventsArray;
         }
-
+        //delete element
         @Override
         public void removeEvent(String date, String text) {
             Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
@@ -164,7 +159,7 @@ public class Controller {
             }
             transferChanges(xmlFile);
         }
-
+        //for change event
         @Override
         public void modifyEvent(String date, String oldText, String newText) {
             Node node = doc.getDocumentElement().getElementsByTagName("d" + date).item(0);
@@ -208,23 +203,5 @@ public class Controller {
                 }
             }
         }
-
-        /*void printEvents() {
-            for (CalendarEvent i: EventList) {
-                System.out.println( i.getDescription() );
-            }
-        }*/
-    }
-    
+    }    
 }
-
-//for check in main
-//        CalendarEventController ctrl = new CalendarEventController();
-//        CalendarEvent testEvent = new CalendarEvent("Trololo");
-//        CalendarEvent testEvent2 = new CalendarEvent("Trololo2");
-        
-//        ctrl.addEvent(testEvent);
-//        ctrl.addEvent(testEvent2);
-//        ctrl.printEvents();
-//        ctrl.deleteEvent(testEvent);
-//        ctrl.printEvents();

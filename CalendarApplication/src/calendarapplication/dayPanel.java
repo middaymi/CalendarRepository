@@ -2,14 +2,12 @@ package calendarapplication;
 
 import calendarapplication.Controller.Dumper;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -100,7 +98,6 @@ public class dayPanel {
             btn.setBackground(Color.WHITE);
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
-            //btn.setContentAreaFilled(false);
             size.setFont40(btn);
             paneInScroll.add(btn, sp);
         }
@@ -138,7 +135,6 @@ public class dayPanel {
             btn.setBackground(Color.WHITE);
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
-            //btn.setContentAreaFilled(false);
             
             paneInScroll.add(btn, sp);
         }
@@ -186,7 +182,6 @@ public class dayPanel {
             sp.gridwidth = 1;
             sp.gridheight = 1;
             sp.weightx = sp.weighty = 1.0;
-            //paneInScroll.setSize(435, paneInScroll.getHeight() + 500);
             sp.fill = GridBagConstraints.BOTH;
             paneInScroll.add(btn, sp);
             paneInScroll.updateUI();
@@ -201,15 +196,14 @@ public class dayPanel {
                 dumper.removeEvent(currentDate, pressedButton.getText());
                 paneInScroll.remove(pressedButton);
 
-                    countOfEvents--;
-                    pressedButton = null;
-                    textAreaInScroll.setText("");
-                    paneInScroll.updateUI();
+                countOfEvents--;
+                pressedButton = null;
+                textAreaInScroll.setText("");
+                paneInScroll.updateUI();
 
                 countOfEvents--;
                 pressedButton = null;
                 paneInScroll.updateUI();
-
             }
         }
     }
@@ -228,6 +222,6 @@ public class dayPanel {
             }
         }
     }
-    }
+}
 
 
